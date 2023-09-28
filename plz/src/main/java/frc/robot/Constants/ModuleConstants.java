@@ -45,6 +45,7 @@ public static class ModuleSpecificConstants {
 
                 kMaxModuleSpeed = 1;
                 kMaxModuleAngularSpeed = 1;
+                break;
 
             // Module 2
             case 2:
@@ -54,6 +55,7 @@ public static class ModuleSpecificConstants {
 
                 kMaxModuleSpeed = 1;
                 kMaxModuleAngularSpeed = 1;
+                break;
 
             // Module 3
             case 3:                
@@ -63,6 +65,7 @@ public static class ModuleSpecificConstants {
 
                 kMaxModuleSpeed = 1;
                 kMaxModuleAngularSpeed = 1;
+                break;
 
             // Module 4
             case 4:
@@ -72,6 +75,7 @@ public static class ModuleSpecificConstants {
 
                 kMaxModuleSpeed = 1;
                 kMaxModuleAngularSpeed = 1;
+                break;
 
             // Module 5
             case 5:
@@ -81,6 +85,7 @@ public static class ModuleSpecificConstants {
 
                 kMaxModuleSpeed = 1;
                 kMaxModuleAngularSpeed = 1;
+                break;
 
             // Module 6
             case 6:
@@ -90,6 +95,7 @@ public static class ModuleSpecificConstants {
 
                 kMaxModuleSpeed = 1;
                 kMaxModuleAngularSpeed = 1;
+                break;
 
             // Module 7
             case 7:
@@ -99,6 +105,7 @@ public static class ModuleSpecificConstants {
 
                 kMaxModuleSpeed = 1;
                 kMaxModuleAngularSpeed = 1;
+                break;
 
             // Module 8
             case 8:
@@ -108,14 +115,8 @@ public static class ModuleSpecificConstants {
 
                 kMaxModuleSpeed = 1;
                 kMaxModuleAngularSpeed = 1;
+                break;
 
-            default:
-                kAbsoluteEncoderOffset = 0;
-                kAbsoluteEncoderReversed = false;
-                kAbsoluteEncoderID = 0;
-
-                kMaxModuleSpeed = 0;
-                kMaxModuleAngularSpeed = 0;
         }
 
     
@@ -128,6 +129,7 @@ public static class ModuleSpecificConstants {
 
                 kdriveMotorID = 18;
                 kturningMotorID = 17;
+                break;
             
             // Front Right
             case "FR":
@@ -136,6 +138,7 @@ public static class ModuleSpecificConstants {
 
                 kdriveMotorID = 12;
                 kturningMotorID = 11;
+                break;
             
             // Back Left
             case "BL":
@@ -144,6 +147,7 @@ public static class ModuleSpecificConstants {
 
                 kdriveMotorID = 16;
                 kturningMotorID = 15;
+                break;
             
             // Back Right
             case "BR":
@@ -152,13 +156,8 @@ public static class ModuleSpecificConstants {
 
                 kdriveMotorID = 14;
                 kturningMotorID = 13;
+                break;
             
-            default:
-                kdriveEncoderReversed = false;
-                kturningEncoderReversed = false;
-
-                kdriveMotorID = 0;
-                kturningMotorID = 0;
         }
 }
     
