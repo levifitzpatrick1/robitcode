@@ -126,32 +126,32 @@ public static class ModuleSpecificConstants {
                 kdriveEncoderReversed = false;
                 kturningEncoderReversed = false;
 
-                kdriveMotorID = 1;
-                kturningMotorID = 2;
+                kdriveMotorID = 18;
+                kturningMotorID = 17;
             
             // Front Right
             case "FR":
-                kdriveEncoderReversed = false;
+                kdriveEncoderReversed = true;
                 kturningEncoderReversed = false;
 
-                kdriveMotorID = 3;
-                kturningMotorID = 4;
+                kdriveMotorID = 12;
+                kturningMotorID = 11;
             
             // Back Left
             case "BL":
                 kdriveEncoderReversed = false;
                 kturningEncoderReversed = false;
 
-                kdriveMotorID = 5;
-                kturningMotorID = 6;
+                kdriveMotorID = 16;
+                kturningMotorID = 15;
             
             // Back Right
             case "BR":
-                kdriveEncoderReversed = false;
+                kdriveEncoderReversed = true;
                 kturningEncoderReversed = false;
 
-                kdriveMotorID = 7;
-                kturningMotorID = 8;
+                kdriveMotorID = 14;
+                kturningMotorID = 13;
             
             default:
                 kdriveEncoderReversed = false;
