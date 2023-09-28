@@ -1,10 +1,12 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -15,7 +17,8 @@ public class Drivetrain extends SubsystemBase {
     private final SwerveModule backLeftModule = new SwerveModule(3, "BL");
     private final SwerveModule backRightModule = new SwerveModule(4, "BR");
 
-    private Pigeon2 gyro = new Pigeon2(0);
+    private Pigeon2 gyro = new Pigeon2(62);
+    private AHRS navx = new AHRS(SPI.Port.kMXP, (byte) 200);
 
     public Drivetrain() {
         new Thread(() -> {
@@ -25,22 +28,34 @@ public class Drivetrain extends SubsystemBase {
         }).start();
     }
 
-    public boolean zeroHeading() {
+    public void zeroHeading() {
         gyro.zeroGyroBiasNow();
-        return true;
+    }
+
+    public void zeroNavx() {
+        navx.reset();
     }
 
     public double getHeading() {
         return gyro.getYaw();
     }
 
+    public double getNavxHeading() {
+        return navx.getAngle();
+    }
+
     public Rotation2d getRotation2d() {
         return Rotation2d.fromDegrees(getHeading());
+    }
+
+    public Rotation2d getNavxRotation2d() {
+        return Rotation2d.fromDegrees(getNavxHeading());
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Robot Heading", getHeading());
+        SmartDashboard.putNumber("Navx Heading", getNavxHeading());
     }
     
     public void stopModules() {
