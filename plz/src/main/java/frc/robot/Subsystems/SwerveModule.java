@@ -21,7 +21,6 @@ public class SwerveModule {
     private final RelativeEncoder turnEncoder;
 
     private final PIDController turningpiController;
-    private final PIDController drivingpiController;
 
     private final CANCoder absoluteEnCoder;
     private final double absoluteEnCoderOffset;
@@ -53,7 +52,6 @@ public class SwerveModule {
         turnEncoder.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
 
         turningpiController = new PIDController(ModuleConstants.kPTurning, 0, 0);
-        drivingpiController = new PIDController(ModuleConstants.kPTurning, 0, 0);
 
         turningpiController.enableContinuousInput(-Math.PI, Math.PI);
 

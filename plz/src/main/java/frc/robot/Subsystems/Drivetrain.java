@@ -1,12 +1,14 @@
 package frc.robot.Subsystems;
 
+import org.photonvision.PhotonCamera;
+
 import com.ctre.phoenix.sensors.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
@@ -24,18 +26,14 @@ public class Drivetrain extends SubsystemBase {
     private Pigeon2 gyro = new Pigeon2(62);
     private AHRS navx = new AHRS(SPI.Port.kMXP, (byte) 200);
 
-    SwerveModulePosition[] modulePositions = new SwerveModulePosition[] {
-        frontLeftModule.getModulePosition(),
-        frontRightModule.getModulePosition(),
-        backLeftModule.getModulePosition(),
-        backRightModule.getModulePosition()
-    };
+    private PhotonCamera camera = new PhotonCamera("photonvision");
 
-    private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(
-        DriveConstants.kDriveKinematics,
-         new Rotation2d(0), 
-         modulePositions
-         );
+ private final SwerveDrivePoseEstimator positionEstimator = new SwerveDrivePoseEstimator(
+    DriveConstants.kDriveKinematics,
+    getRotation2d(),
+    getModulePositions(),
+    new Pose2d()
+        );
     
 
     public Drivetrain() {
@@ -55,14 +53,8 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void resetOdometry(Pose2d pose) {
-        SwerveModulePosition[] modulePositions = new SwerveModulePosition[] {
-            frontLeftModule.getModulePosition(),
-            frontRightModule.getModulePosition(),
-            backLeftModule.getModulePosition(),
-            backRightModule.getModulePosition()
-        };
-        odometry.update(getRotation2d(), modulePositions);
-        odometry.resetPosition(getRotation2d(), modulePositions, pose);
+        positionEstimator.update(getRotation2d(), getModulePositions());
+        positionEstimator.resetPosition(getRotation2d(), getModulePositions(), pose);
     }
 
     public double getHeading() {
@@ -74,17 +66,33 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public Rotation2d getRotation2d() {
-        return Rotation2d.fromDegrees(getHeading());
+        return Rotation2d.fromDegrees(getNavxHeading());
     }
 
     public Rotation2d getNavxRotation2d() {
         return Rotation2d.fromDegrees(getNavxHeading());
     }
 
+    public SwerveModulePosition[] getModulePositions() {
+        return new SwerveModulePosition[] {
+            frontLeftModule.getModulePosition(),
+            frontRightModule.getModulePosition(),
+            backLeftModule.getModulePosition(),
+            backRightModule.getModulePosition()
+        };
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Robot Heading", getHeading());
         SmartDashboard.putNumber("Navx Heading", getNavxHeading());
+        SmartDashboard.putNumber("FL Cancoder", frontLeftModule.getAbsolutePosition());
+        SmartDashboard.putNumber("FR Cancoder", frontRightModule.getAbsolutePosition());
+        SmartDashboard.putNumber("BL Cancoder", backLeftModule.getAbsolutePosition());
+        SmartDashboard.putNumber("BR Cancoder", backRightModule.getAbsolutePosition());
+
+        positionEstimator.update(getRotation2d(), getModulePositions());
+
     }
     
     public void stopModules() {
@@ -116,4 +124,5 @@ public class Drivetrain extends SubsystemBase {
         backLeftModule.setDesiredState(desiredStates[2]);
         backRightModule.setDesiredState(desiredStates[3]);
     }
+
 }
