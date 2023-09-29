@@ -32,7 +32,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new JoystickButton(driverController, OIConstants.kXboxBButton).onTrue(new InstantCommand(() -> drivetrain.zeroHeading(), drivetrain));
+    new JoystickButton(driverController, OIConstants.kXboxBButton).onTrue(new InstantCommand(() -> drivetrain.zeroNavx(), drivetrain));
   }
 
   public Command getAutonomousCommand() {

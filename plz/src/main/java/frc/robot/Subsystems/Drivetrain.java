@@ -1,8 +1,8 @@
 package frc.robot.Subsystems;
 
-import org.photonvision.PhotonCamera;
+//import org.photonvision.PhotonCamera;
 
-import com.ctre.phoenix.sensors.Pigeon2;
+//import com.ctre.phoenix.sensors.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -23,10 +23,10 @@ public class Drivetrain extends SubsystemBase {
     private final SwerveModule backLeftModule = new SwerveModule(5, "BL");
     private final SwerveModule backRightModule = new SwerveModule(7, "BR");
 
-    private Pigeon2 gyro = new Pigeon2(62);
+    //private Pigeon2 gyro = new Pigeon2(62);
     private AHRS navx = new AHRS(SPI.Port.kMXP, (byte) 200);
 
-    private PhotonCamera camera = new PhotonCamera("photonvision");
+    //private PhotonCamera camera = new PhotonCamera("photonvision");
 
  private final SwerveDrivePoseEstimator positionEstimator = new SwerveDrivePoseEstimator(
     DriveConstants.kDriveKinematics,
@@ -44,9 +44,9 @@ public class Drivetrain extends SubsystemBase {
         }).start();
     }
 
-    public void zeroHeading() {
-        gyro.zeroGyroBiasNow();
-    }
+    //public void zeroHeading() {
+    //    gyro.zeroGyroBiasNow();
+    //}
 
     public void zeroNavx() {
         navx.reset();
@@ -57,9 +57,9 @@ public class Drivetrain extends SubsystemBase {
         positionEstimator.resetPosition(getRotation2d(), getModulePositions(), pose);
     }
 
-    public double getHeading() {
-        return gyro.getYaw();
-    }
+   // public double getHeading() {
+   //     return gyro.getYaw();
+   // }
 
     public double getNavxHeading() {
         return navx.getAngle();
@@ -84,7 +84,7 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Robot Heading", getHeading());
+        //SmartDashboard.putNumber("Robot Heading", getHeading());
         SmartDashboard.putNumber("Navx Heading", getNavxHeading());
         SmartDashboard.putNumber("FL Cancoder", frontLeftModule.getAbsolutePosition());
         SmartDashboard.putNumber("FR Cancoder", frontRightModule.getAbsolutePosition());
