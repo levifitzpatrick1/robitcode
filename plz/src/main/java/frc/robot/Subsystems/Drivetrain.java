@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
 
+import com.ctre.phoenix.sensors.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -17,7 +18,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Constants.DriveConstants;
 import frc.robot.Constants.Constants.VisionConstants;
-import frc.robot.Constants.Constants.VisionConstants;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -26,11 +26,11 @@ public class Drivetrain extends SubsystemBase {
     private final SwerveModule backLeftModule = new SwerveModule(5, "BL");
     private final SwerveModule backRightModule = new SwerveModule(7, "BR");
 
-    //private Pigeon2 gyro = new Pigeon2(62);
-    private AHRS navx = new AHRS(SPI.Port.kMXP, (byte) 200);
+    private Pigeon2 gyro;
+    private AHRS navx;
 
-<<<<<<< HEAD
-    //private PhotonCamera camera = new PhotonCamera("photonvision");
+
+
 
     public PhotonCameraWrapper FrontCam;
 
@@ -49,14 +49,20 @@ public class Drivetrain extends SubsystemBase {
             } catch (Exception e) {}
         }).start();
 
-        //zeroHeading();
-        zeroNavx();
+        if (DriveConstants.kPidgeonGyro) {
+            gyro = new Pigeon2(62);
+            zeroHeading();
+        } else {
+            navx = new AHRS(SPI.Port.kMXP);
+            zeroNavx();
+        }
+
         FrontCam = new PhotonCameraWrapper(VisionConstants.kFrontCamName, VisionConstants.kFrontRobotToCam);
     }
 
-    //public void zeroHeading() {
-    //    gyro.zeroGyroBiasNow();
-    //}
+    public void zeroHeading() {
+        gyro.zeroGyroBiasNow();
+    }
 
     public void zeroNavx() {
         navx.reset();
@@ -67,9 +73,9 @@ public class Drivetrain extends SubsystemBase {
         positionEstimator.resetPosition(getRotation2d(), getModulePositions(), pose);
     }
 
-   // public double getHeading() {
-   //     return gyro.getYaw();
-   // }
+    public double getHeading() {
+       return gyro.getYaw();
+    }
 
     public double getNavxHeading() {
         return navx.getAngle();
@@ -138,16 +144,6 @@ public class Drivetrain extends SubsystemBase {
         backRightModule.setDesiredState(desiredStates[3]);
     }
 
-    public void updateOdometry() {
-        positionEstimator.update(getRotation2d(), getModulePositions());
-
-        Optional<EstimatedRobotPose> result = FrontCam.getEstimatedGlobalPose(positionEstimator.getEstimatedPosition());
-
-        if (result.isPresent()) {
-            EstimatedRobotPose camPose = result.get();
-            positionEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
-        }
-    }
 
     public void updateOdometry() {
         positionEstimator.update(getRotation2d(), getModulePositions());

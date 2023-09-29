@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Commands.SwerveJoystickCmd;
+import frc.robot.Constants.Constants.DriveConstants;
 import frc.robot.Constants.Constants.OIConstants;
 import frc.robot.Subsystems.Drivetrain;
 
@@ -32,7 +33,12 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new JoystickButton(driverController, OIConstants.kXboxBButton).onTrue(new InstantCommand(() -> drivetrain.zeroNavx(), drivetrain));
+    if(DriveConstants.kPidgeonGyro) {
+      new JoystickButton(driverController, OIConstants.kXboxBButton).onTrue(new InstantCommand(() -> drivetrain.zeroHeading(), drivetrain));
+    } else { 
+      new JoystickButton(driverController, OIConstants.kXboxBButton).onTrue(new InstantCommand(() -> drivetrain.zeroNavx(), drivetrain));
+    }
+   
   }
 
   public Command getAutonomousCommand() {
