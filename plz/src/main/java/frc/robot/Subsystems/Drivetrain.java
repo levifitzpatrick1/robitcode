@@ -1,15 +1,9 @@
 package frc.robot.Subsystems;
 
-<<<<<<< HEAD
-//import org.photonvision.PhotonCamera;
-
-//import com.ctre.phoenix.sensors.Pigeon2;
-=======
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
-import com.ctre.phoenix.sensors.Pigeon2;
->>>>>>> 46470a60a55312e98e47e580de017d9a9b991800
+
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -34,11 +28,9 @@ public class Drivetrain extends SubsystemBase {
     //private Pigeon2 gyro = new Pigeon2(62);
     private AHRS navx = new AHRS(SPI.Port.kMXP, (byte) 200);
 
-<<<<<<< HEAD
     //private PhotonCamera camera = new PhotonCamera("photonvision");
-=======
+
     public PhotonCameraWrapper FrontCam;
->>>>>>> 46470a60a55312e98e47e580de017d9a9b991800
 
  private final SwerveDrivePoseEstimator positionEstimator = new SwerveDrivePoseEstimator(
     DriveConstants.kDriveKinematics,
@@ -55,7 +47,7 @@ public class Drivetrain extends SubsystemBase {
             } catch (Exception e) {}
         }).start();
 
-        zeroHeading();
+        //zeroHeading();
         zeroNavx();
         FrontCam = new PhotonCameraWrapper(VisionConstants.kFrontCamName, VisionConstants.kFrontRobotToCam);
     }
@@ -83,7 +75,7 @@ public class Drivetrain extends SubsystemBase {
 
     public Rotation2d getRotation2d() {
         if (DriveConstants.kPidgeonGyro) {
-            return Rotation2d.fromDegrees(getHeading());
+            return Rotation2d.fromDegrees(getNavxHeading());
         } else {
             return Rotation2d.fromDegrees(getNavxHeading());
         }
