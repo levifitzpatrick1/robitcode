@@ -7,16 +7,15 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Commands.SwerveJoystickCmd;
-import frc.robot.Constants.Constants.DriveConstants;
+import frc.robot.Commands.DriveCommands.ResetHeadingCmd;
+import frc.robot.Commands.DriveCommands.SwerveJoystickCmd;
 import frc.robot.Constants.Constants.OIConstants;
 import frc.robot.Subsystems.Drivetrain;
 
 public class RobotContainer {
 
-  private final Drivetrain drivetrain = new Drivetrain();
+  final Drivetrain drivetrain = new Drivetrain();
   
   private final Joystick driverController = new Joystick(OIConstants.kDriverControllerPort);
 
@@ -33,12 +32,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    if(DriveConstants.kPidgeonGyro) {
-      new JoystickButton(driverController, OIConstants.kXboxBButton).onTrue(new InstantCommand(() -> drivetrain.zeroHeading(), drivetrain));
-    } else { 
-      new JoystickButton(driverController, OIConstants.kXboxBButton).onTrue(new InstantCommand(() -> drivetrain.zeroNavx(), drivetrain));
-    }
-   
+    new JoystickButton(driverController, OIConstants.kXboxBButton)
+      .onTrue(new ResetHeadingCmd(drivetrain));
   }
 
   public Command getAutonomousCommand() {
