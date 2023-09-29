@@ -106,7 +106,7 @@ public static class ModuleSpecificConstants {
                 kMaxModuleSpeed = 1;
                 kMaxModuleAngularSpeed = 1;
                 break;
-
+            
             // Module 8
             case 8:
                 kAbsoluteEncoderOffset = 0;
@@ -118,8 +118,6 @@ public static class ModuleSpecificConstants {
                 break;
 
         }
-
-    
 
         switch (moduleLoc) {
             // Front Left
