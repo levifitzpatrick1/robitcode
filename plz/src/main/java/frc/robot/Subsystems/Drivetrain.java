@@ -152,10 +152,10 @@ public class Drivetrain extends SubsystemBase {
         }
     }
 
-    public void trackTargetIDRotation(double targetID) {
+    public void trackTargetIDRotation(Integer targetID) {
         PhotonPipelineResult result = FrontCam.photonCamera.getLatestResult();
 
-        if (result.hasTargets() && result.getBestTarget().getFiducialId() == targetID) {
+        if (result.hasTargets() && (result.getBestTarget().getFiducialId() == targetID || targetID == 99)) {
             double yaw = result.getBestTarget().getYaw();
             double yawRate = result.getBestTarget().getYaw();
             double yawSetpoint = yaw + yawRate * 0.1;

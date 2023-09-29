@@ -54,11 +54,14 @@ public class Constants {
 
         public static double kVisionRotationP;
 
+        public static double kVisionTranslationP;
+
 
     }
 
     public static class VisionConstants {
 
+        public static final double kFrontCameraPitch = 0;
         public static final Transform3d kFrontRobotToCam = 
         new Transform3d(
             new Translation3d(0.5, 0.5, 0.5),
