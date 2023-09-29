@@ -27,7 +27,7 @@ public class Drivetrain extends SubsystemBase {
     private final SwerveModule backRightModule = new SwerveModule(7, "BR");
 
     private Pigeon2 gyro;
-    private AHRS navx;
+    private AHRS navx = new AHRS(SPI.Port.kMXP);
 
 
 
@@ -53,7 +53,6 @@ public class Drivetrain extends SubsystemBase {
             gyro = new Pigeon2(62);
             zeroHeading();
         } else {
-            navx = new AHRS(SPI.Port.kMXP);
             zeroNavx();
         }
 
