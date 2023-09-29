@@ -89,7 +89,7 @@ public static class ModuleSpecificConstants {
 
             // Module 6
             case 6:
-                kAbsoluteEncoderOffset = 0;
+                kAbsoluteEncoderOffset = 0;                
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 6;
 
