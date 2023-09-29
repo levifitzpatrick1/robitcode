@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Constants.DriveConstants;
 import frc.robot.Constants.Constants.VisionConstants;
+import frc.robot.Constants.Constants.VisionConstants;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -28,6 +29,7 @@ public class Drivetrain extends SubsystemBase {
     //private Pigeon2 gyro = new Pigeon2(62);
     private AHRS navx = new AHRS(SPI.Port.kMXP, (byte) 200);
 
+<<<<<<< HEAD
     //private PhotonCamera camera = new PhotonCamera("photonvision");
 
     public PhotonCameraWrapper FrontCam;
@@ -82,6 +84,8 @@ public class Drivetrain extends SubsystemBase {
     }
     
 
+    
+
     public SwerveModulePosition[] getModulePositions() {
         return new SwerveModulePosition[] {
             frontLeftModule.getModulePosition(),
@@ -132,6 +136,17 @@ public class Drivetrain extends SubsystemBase {
         frontRightModule.setDesiredState(desiredStates[1]);
         backLeftModule.setDesiredState(desiredStates[2]);
         backRightModule.setDesiredState(desiredStates[3]);
+    }
+
+    public void updateOdometry() {
+        positionEstimator.update(getRotation2d(), getModulePositions());
+
+        Optional<EstimatedRobotPose> result = FrontCam.getEstimatedGlobalPose(positionEstimator.getEstimatedPosition());
+
+        if (result.isPresent()) {
+            EstimatedRobotPose camPose = result.get();
+            positionEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+        }
     }
 
     public void updateOdometry() {
