@@ -3,6 +3,7 @@ package frc.robot.Subsystems;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
@@ -10,6 +11,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -51,20 +53,19 @@ public class Drivetrain extends SubsystemBase {
 
         if (DriveConstants.kPidgeonGyro) {
             gyro = new Pigeon2(62);
-            zeroHeading();
-        } else {
-            zeroNavx();
         }
+
+        zeroHeading();
 
         FrontCam = new PhotonCameraWrapper(VisionConstants.kFrontCamName, VisionConstants.kFrontRobotToCam);
     }
 
     public void zeroHeading() {
-        gyro.zeroGyroBiasNow();
-    }
-
-    public void zeroNavx() {
-        navx.reset();
+        if (DriveConstants.kPidgeonGyro) {
+            gyro.zeroGyroBiasNow();
+        } else {
+            navx.reset();
+        }
     }
 
     public void resetOdometry(Pose2d pose) {
@@ -73,19 +74,16 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double getHeading() {
-       return gyro.getYaw();
+        if (DriveConstants.kPidgeonGyro) {
+            return gyro.getYaw();
+        } else {
+            return navx.getAngle();
+        }
     }
 
-    public double getNavxHeading() {
-        return navx.getAngle();
-    }
 
     public Rotation2d getRotation2d() {
-        if (DriveConstants.kPidgeonGyro) {
-            return Rotation2d.fromDegrees(getNavxHeading());
-        } else {
-            return Rotation2d.fromDegrees(getNavxHeading());
-        }
+        return Rotation2d.fromDegrees(getHeading());
     }
     
 
@@ -102,8 +100,7 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //SmartDashboard.putNumber("Robot Heading", getHeading());
-        SmartDashboard.putNumber("Navx Heading", getNavxHeading());
+        SmartDashboard.putNumber("Robot Heading", getHeading());
         SmartDashboard.putNumber("FL Cancoder", frontLeftModule.getAbsolutePosition());
         SmartDashboard.putNumber("FR Cancoder", frontRightModule.getAbsolutePosition());
         SmartDashboard.putNumber("BL Cancoder", backLeftModule.getAbsolutePosition());
@@ -152,6 +149,25 @@ public class Drivetrain extends SubsystemBase {
         if (result.isPresent()) {
             EstimatedRobotPose camPose = result.get();
             positionEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+        }
+    }
+
+    public void trackTargetIDRotation(double targetID) {
+        PhotonPipelineResult result = FrontCam.photonCamera.getLatestResult();
+
+        if (result.hasTargets() && result.getBestTarget().getFiducialId() == targetID) {
+            double yaw = result.getBestTarget().getYaw();
+            double yawRate = result.getBestTarget().getYaw();
+            double yawSetpoint = yaw + yawRate * 0.1;
+            double yawError = yawSetpoint - getHeading();
+            double yawOutput = yawError * DriveConstants.kVisionRotationP;
+            setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(
+                new ChassisSpeeds(0, 0, yawOutput)
+            ));
+        } else {
+            setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(
+                new ChassisSpeeds(0, 0, 0)
+            ));
         }
     }
 

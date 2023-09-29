@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Commands.DriveCommands.ResetHeadingCmd;
 import frc.robot.Commands.DriveCommands.SwerveJoystickCmd;
+import frc.robot.Commands.VisionCommands.TrackTargetIDRotCmd;
 import frc.robot.Constants.Constants.OIConstants;
 import frc.robot.Subsystems.Drivetrain;
 
@@ -34,7 +35,15 @@ public class RobotContainer {
   private void configureBindings() {
     new JoystickButton(driverController, OIConstants.kXboxBButton)
       .onTrue(new ResetHeadingCmd(drivetrain));
+
+    new JoystickButton(driverController, OIConstants.kXboxXButton)
+      .whileTrue(new TrackTargetIDRotCmd(drivetrain, 1));
+
+      new JoystickButton(driverController, OIConstants.kXboxYButton)
+      .whileTrue(new TrackTargetIDRotCmd(drivetrain, 2));
   }
+
+ 
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
