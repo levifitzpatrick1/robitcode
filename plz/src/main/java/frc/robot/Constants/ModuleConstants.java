@@ -6,21 +6,21 @@ public class ModuleConstants {
 
 public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
 public static final double kDriveMotorGearRatio = 1 / 6.75;
-public static final double kTurningMotorGearRatio = 1 / (150 / 7);
+public static final double kTurningMotorGearRatio = 7 / 150;
 public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
 public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
 public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
 public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
-public static final double kPTurning = 0.5;
+public static final double kPTurning = .5;
 
-public static final double kPhysicalMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);
+public static final double kPhysicalMaxSpeedMetersPerSecond = Units.feetToMeters(16.5);
 public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
 
 public static class ModuleSpecificConstants {
     //Absolute Encoder Offset and ID
     public double kAbsoluteEncoderOffset;
     public boolean kAbsoluteEncoderReversed;
-    public int kAbsoluteEncoderID;
+    public Integer kAbsoluteEncoderID;
 
     //Module Speeds
     public double kMaxModuleSpeed;
@@ -31,16 +31,16 @@ public static class ModuleSpecificConstants {
      public boolean kturningEncoderReversed;
  
      //Motor IDs
-     public int kdriveMotorID;
-     public int kturningMotorID;
+     public Integer kdriveMotorID;
+     public Integer kturningMotorID;
 
-    public ModuleSpecificConstants(int moduleID, String moduleLoc)
+    public ModuleSpecificConstants(Integer moduleID, String moduleLoc)
     {
         switch (moduleID) {
             // Module 1
             case 1:
-                kAbsoluteEncoderOffset = 0;
-                kAbsoluteEncoderReversed = false;
+                kAbsoluteEncoderOffset = -293.554688;
+                kAbsoluteEncoderReversed = true;
                 kAbsoluteEncoderID = 1;
 
                 kMaxModuleSpeed = 1;
@@ -49,8 +49,8 @@ public static class ModuleSpecificConstants {
 
             // Module 2
             case 2:
-                kAbsoluteEncoderOffset = 0;
-                kAbsoluteEncoderReversed = false;
+                kAbsoluteEncoderOffset = -318.955078;
+                kAbsoluteEncoderReversed = true;
                 kAbsoluteEncoderID = 2;
 
                 kMaxModuleSpeed = 1;
@@ -59,8 +59,8 @@ public static class ModuleSpecificConstants {
 
             // Module 3
             case 3:                
-                kAbsoluteEncoderOffset = 0;
-                kAbsoluteEncoderReversed = false;
+                kAbsoluteEncoderOffset = -64.072266;
+                kAbsoluteEncoderReversed = true;
                 kAbsoluteEncoderID = 3;
 
                 kMaxModuleSpeed = 1;
@@ -69,8 +69,8 @@ public static class ModuleSpecificConstants {
 
             // Module 4
             case 4:
-                kAbsoluteEncoderOffset = 0;
-                kAbsoluteEncoderReversed = false;
+                kAbsoluteEncoderOffset = -290.390625;
+                kAbsoluteEncoderReversed = true;
                 kAbsoluteEncoderID = 4;
 
                 kMaxModuleSpeed = 1;
@@ -122,39 +122,77 @@ public static class ModuleSpecificConstants {
         switch (moduleLoc) {
             // Front Left
             case "FL":
+                // Other Bot
                 kdriveEncoderReversed = false;
-                kturningEncoderReversed = false;
+                kturningEncoderReversed = true;
 
-                kdriveMotorID = 18;
-                kturningMotorID = 17;
+                kdriveMotorID = 11;
+                kturningMotorID = 12;
                 break;
+
+
+                //School Bot
+                // kdriveEncoderReversed = false;
+                // kturningEncoderReversed = true;
+
+                // kdriveMotorID = 11;
+                // kturningMotorID = 12;
+                // break;
             
             // Front Right
             case "FR":
+                //Other Bot
                 kdriveEncoderReversed = true;
-                kturningEncoderReversed = false;
+                kturningEncoderReversed = true;
 
-                kdriveMotorID = 12;
-                kturningMotorID = 11;
+                kdriveMotorID = 17;
+                kturningMotorID = 18;
                 break;
-            
+
+                //School Bot
+                // kdriveEncoderReversed = true;
+                // kturningEncoderReversed = true;
+
+                // kdriveMotorID = 17;
+                // kturningMotorID = 18;
+                // break;
+
             // Back Left
             case "BL":
+                //Other Bot
                 kdriveEncoderReversed = false;
-                kturningEncoderReversed = false;
+                kturningEncoderReversed = true;
 
-                kdriveMotorID = 16;
-                kturningMotorID = 15;
+                kdriveMotorID = 13;
+                kturningMotorID = 14;
                 break;
             
+                //School Bot
+                // kdriveEncoderReversed = false;
+                // kturningEncoderReversed = true;
+
+                // kdriveMotorID = 13;
+                // kturningMotorID = 14;
+                // break;
+
             // Back Right
             case "BR":
-                kdriveEncoderReversed = true;
-                kturningEncoderReversed = false;
 
-                kdriveMotorID = 14;
-                kturningMotorID = 13;
+                //Other Bot
+                kdriveEncoderReversed = true;
+                kturningEncoderReversed = true;
+
+                kdriveMotorID = 15;
+                kturningMotorID = 16;
                 break;
+
+                //School Bot
+                // kdriveEncoderReversed = true;
+                // kturningEncoderReversed = true;
+
+                // kdriveMotorID = 15;
+                // kturningMotorID = 16;
+                // break;
             
         }
 }
