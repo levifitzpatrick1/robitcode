@@ -23,10 +23,10 @@ import frc.robot.Constants.Constants.VisionConstants;
 
 public class Drivetrain extends SubsystemBase {
 
-    private final SwerveModule frontLeftModule = new SwerveModule( 6, "FL");
-    private final SwerveModule frontRightModule = new SwerveModule(8, "FR");
-    private final SwerveModule backLeftModule = new SwerveModule(5, "BL");
-    private final SwerveModule backRightModule = new SwerveModule(7, "BR");
+    private final SwerveModule frontLeftModule = new SwerveModule( 3, "FL");
+    private final SwerveModule frontRightModule = new SwerveModule(4, "FR");
+    private final SwerveModule backLeftModule = new SwerveModule(2, "BL");
+    private final SwerveModule backRightModule = new SwerveModule(1, "BR");
 
     private Pigeon2 gyro;
     private AHRS navx = new AHRS(SPI.Port.kMXP);
@@ -138,6 +138,11 @@ public class Drivetrain extends SubsystemBase {
         frontRightModule.setDesiredState(desiredStates[1]);
         backLeftModule.setDesiredState(desiredStates[2]);
         backRightModule.setDesiredState(desiredStates[3]);
+
+        SmartDashboard.putNumber("FL Desired State", desiredStates[0].angle.getDegrees());
+        SmartDashboard.putNumber("FR Desired State", desiredStates[1].angle.getDegrees());
+        SmartDashboard.putNumber("BL Desired State", desiredStates[2].angle.getDegrees());
+        SmartDashboard.putNumber("BR Desired State", desiredStates[3].angle.getDegrees());
     }
 
 

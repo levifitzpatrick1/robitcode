@@ -12,7 +12,7 @@ public class Constants {
     public static class OIConstants {
         public static final int kDriverControllerPort = 0;
 
-        public static final int kDeadband = 0;
+        public static final double kDeadband = 0.1;
 
         public static final int kXboxAButton = 1;
         public static final int kXboxBButton = 2;

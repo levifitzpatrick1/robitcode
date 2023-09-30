@@ -40,6 +40,9 @@ public class SwerveModule {
         driveMotor = new CANSparkMax(constants.kdriveMotorID, CANSparkMax.MotorType.kBrushless);
         turnMotor = new CANSparkMax(constants.kturningMotorID, CANSparkMax.MotorType.kBrushless);
 
+        turnMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
         driveEncoder = driveMotor.getEncoder();
         turnEncoder = turnMotor.getEncoder();
 
@@ -75,7 +78,7 @@ public class SwerveModule {
     }
 
     public double getAbsolutePosition() {
-        return (absoluteEnCoder.getPosition() + absoluteEnCoderOffset) * (absoluteEnCoderReversed ? -1 : 1);
+        return (absoluteEnCoder.getAbsolutePosition() + absoluteEnCoderOffset) * (absoluteEnCoderReversed ? -1 : 1);
     }
 
     public void resetEncoders() {
