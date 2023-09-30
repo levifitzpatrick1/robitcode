@@ -23,10 +23,17 @@ import frc.robot.Constants.Constants.VisionConstants;
 
 public class Drivetrain extends SubsystemBase {
 
+    // Other Bot
     private final SwerveModule frontLeftModule = new SwerveModule( 3, "FL");
     private final SwerveModule frontRightModule = new SwerveModule(4, "FR");
     private final SwerveModule backLeftModule = new SwerveModule(2, "BL");
     private final SwerveModule backRightModule = new SwerveModule(1, "BR");
+
+    // School Bot
+    // private final SwerveModule frontLeftModule = new SwerveModule( 5, "FL");
+    // private final SwerveModule frontRightModule = new SwerveModule(6, "FR");
+    // private final SwerveModule backLeftModule = new SwerveModule(7, "BL");
+    // private final SwerveModule backRightModule = new SwerveModule(8, "BR");
 
     private Pigeon2 gyro;
     private AHRS navx = new AHRS(SPI.Port.kMXP);
@@ -101,10 +108,10 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Robot Heading", getHeading());
-        SmartDashboard.putNumber("FL Cancoder", frontLeftModule.getAbsolutePosition());
-        SmartDashboard.putNumber("FR Cancoder", frontRightModule.getAbsolutePosition());
-        SmartDashboard.putNumber("BL Cancoder", backLeftModule.getAbsolutePosition());
-        SmartDashboard.putNumber("BR Cancoder", backRightModule.getAbsolutePosition());
+        SmartDashboard.putNumber("FL Cancoder", frontLeftModule.getAbsolutePositionDegrees());
+        SmartDashboard.putNumber("FR Cancoder", frontRightModule.getAbsolutePositionDegrees());
+        SmartDashboard.putNumber("BL Cancoder", backLeftModule.getAbsolutePositionDegrees());
+        SmartDashboard.putNumber("BR Cancoder", backRightModule.getAbsolutePositionDegrees());
 
         positionEstimator.update(getRotation2d(), getModulePositions());
 
@@ -143,6 +150,11 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("FR Desired State", desiredStates[1].angle.getDegrees());
         SmartDashboard.putNumber("BL Desired State", desiredStates[2].angle.getDegrees());
         SmartDashboard.putNumber("BR Desired State", desiredStates[3].angle.getDegrees());
+
+        SmartDashboard.putNumber("FL Turn Encoder Val", frontLeftModule.getTurnPosition());
+        SmartDashboard.putNumber("FR Turn Encoder Val", frontRightModule.getTurnPosition());
+        SmartDashboard.putNumber("BL Turn Encoder Val", backLeftModule.getTurnPosition());
+        SmartDashboard.putNumber("BR Turn Encoder Val", backRightModule.getTurnPosition());
     }
 
 

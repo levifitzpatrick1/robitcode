@@ -39,8 +39,8 @@ public static class ModuleSpecificConstants {
         switch (moduleID) {
             // Module 1
             case 1:
-                kAbsoluteEncoderOffset = -293.554688;
-                kAbsoluteEncoderReversed = true;
+                kAbsoluteEncoderOffset = 0;
+                kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 1;
 
                 kMaxModuleSpeed = 1;
@@ -49,8 +49,8 @@ public static class ModuleSpecificConstants {
 
             // Module 2
             case 2:
-                kAbsoluteEncoderOffset = -318.955078;
-                kAbsoluteEncoderReversed = true;
+                kAbsoluteEncoderOffset = 0;
+                kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 2;
 
                 kMaxModuleSpeed = 1;
@@ -59,8 +59,8 @@ public static class ModuleSpecificConstants {
 
             // Module 3
             case 3:                
-                kAbsoluteEncoderOffset = -64.072266;
-                kAbsoluteEncoderReversed = true;
+                kAbsoluteEncoderOffset = 0;
+                kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 3;
 
                 kMaxModuleSpeed = 1;
@@ -69,8 +69,8 @@ public static class ModuleSpecificConstants {
 
             // Module 4
             case 4:
-                kAbsoluteEncoderOffset = -290.390625;
-                kAbsoluteEncoderReversed = true;
+                kAbsoluteEncoderOffset = 0;
+                kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 4;
 
                 kMaxModuleSpeed = 1;

@@ -1,5 +1,6 @@
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -77,13 +78,18 @@ public class SwerveModule {
         return turnEncoder.getVelocity();
     }
 
-    public double getAbsolutePosition() {
-        return (absoluteEnCoder.getAbsolutePosition() + absoluteEnCoderOffset) * (absoluteEnCoderReversed ? -1 : 1);
+    public double getAbsolutePositionRadians() {
+        return Math.toRadians(getAbsolutePositionDegrees());
+    }
+
+    public double getAbsolutePositionDegrees() {
+        absoluteEnCoder.configAbsoluteSensorRange(AbsoluteSensorRange.valueOf(1));
+        return absoluteEnCoder.getAbsolutePosition() + absoluteEnCoderOffset * (absoluteEnCoderReversed ? -1 : 1);
     }
 
     public void resetEncoders() {
         driveEncoder.setPosition(0);
-        turnEncoder.setPosition(getAbsolutePosition());
+        turnEncoder.setPosition(getAbsolutePositionRadians());
     }
 
     public SwerveModulePosition getModulePosition() {
