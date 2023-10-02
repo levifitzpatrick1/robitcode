@@ -35,8 +35,8 @@ public class SwerveJoystickCmd extends CommandBase {
 
     @Override
     public void execute() {
-        double xSpeed = xSpdFunction.get();
-        double ySpeed = ySpdFunction.get();
+        double xSpeed = -ySpdFunction.get();
+        double ySpeed = -xSpdFunction.get();
         double rot = rotFunction.get();
 
         xSpeed = Math.abs(xSpeed) < OIConstants.kDeadband ? 0 : xSpeed;

@@ -11,7 +11,7 @@ public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.
 public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
 public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
 public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
-public static final double kPTurning = .5;
+public static final double kPTurning = .1;
 
 public static final double kPhysicalMaxSpeedMetersPerSecond = Units.feetToMeters(16.5);
 public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;

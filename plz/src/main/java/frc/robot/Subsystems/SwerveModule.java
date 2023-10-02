@@ -1,7 +1,7 @@
 package frc.robot.Subsystems;
 
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
-import com.ctre.phoenix.sensors.CANCoder;
+
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
@@ -23,7 +23,7 @@ public class SwerveModule {
 
     private final PIDController turningpiController;
 
-    private final CANCoder absoluteEnCoder;
+    private final CANcoder absoluteEnCoder;
     private final double absoluteEnCoderOffset;
     private final boolean absoluteEnCoderReversed;
 
@@ -34,7 +34,7 @@ public class SwerveModule {
     {
         constants = new ModuleSpecificConstants(moduleID, moduleLocation);
 
-        absoluteEnCoder = new CANCoder(constants.kAbsoluteEncoderID);
+        absoluteEnCoder = new CANcoder(constants.kAbsoluteEncoderID);
         absoluteEnCoderOffset = constants.kAbsoluteEncoderOffset;
         absoluteEnCoderReversed = constants.kAbsoluteEncoderReversed;
 
@@ -74,6 +74,7 @@ public class SwerveModule {
         return turnEncoder.getPosition();
     }
 
+    
     public double getTurnVelocity() {
         return turnEncoder.getVelocity();
     }
@@ -83,9 +84,12 @@ public class SwerveModule {
     }
 
     public double getAbsolutePositionDegrees() {
-        absoluteEnCoder.configAbsoluteSensorRange(AbsoluteSensorRange.valueOf(1));
-        return absoluteEnCoder.getAbsolutePosition() + absoluteEnCoderOffset * (absoluteEnCoderReversed ? -1 : 1);
+        double rawPosition = absoluteEnCoder.getAbsolutePosition().getValue();
+        double angle = rawPosition * 360.0;
+        return (angle * (absoluteEnCoderReversed ? -1 : 1));
     }
+    
+    
 
     public void resetEncoders() {
         driveEncoder.setPosition(0);

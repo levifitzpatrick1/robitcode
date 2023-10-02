@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.targeting.PhotonPipelineResult;
 
-import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -69,7 +69,7 @@ public class Drivetrain extends SubsystemBase {
 
     public void zeroHeading() {
         if (DriveConstants.kPidgeonGyro) {
-            gyro.zeroGyroBiasNow();
+            gyro.reset();
         } else {
             navx.reset();
         }
@@ -82,7 +82,7 @@ public class Drivetrain extends SubsystemBase {
 
     public double getHeading() {
         if (DriveConstants.kPidgeonGyro) {
-            return gyro.getYaw();
+            return gyro.getAngle();
         } else {
             return navx.getAngle();
         }
@@ -151,10 +151,10 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("BL Desired State", desiredStates[2].angle.getDegrees());
         SmartDashboard.putNumber("BR Desired State", desiredStates[3].angle.getDegrees());
 
-        SmartDashboard.putNumber("FL Turn Encoder Val", frontLeftModule.getTurnPosition());
-        SmartDashboard.putNumber("FR Turn Encoder Val", frontRightModule.getTurnPosition());
-        SmartDashboard.putNumber("BL Turn Encoder Val", backLeftModule.getTurnPosition());
-        SmartDashboard.putNumber("BR Turn Encoder Val", backRightModule.getTurnPosition());
+        SmartDashboard.putNumber("FL Turn Encoder Val", Math.toDegrees(frontLeftModule.getTurnPosition()));
+        SmartDashboard.putNumber("FR Turn Encoder Val", Math.toDegrees(frontRightModule.getTurnPosition()));
+        SmartDashboard.putNumber("BL Turn Encoder Val", Math.toDegrees(backLeftModule.getTurnPosition()));
+        SmartDashboard.putNumber("BR Turn Encoder Val", Math.toDegrees(backRightModule.getTurnPosition()));
     }
 
 
