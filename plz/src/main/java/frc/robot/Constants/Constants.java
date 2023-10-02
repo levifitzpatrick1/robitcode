@@ -37,7 +37,7 @@ public class Constants {
 
     public static class DriveConstants {
 
-        public static final boolean kPidgeonGyro = false;
+        public static final boolean kPidgeonGyro = true;
 
         public static final double kTrackWidth = Units.inchesToMeters(30);
         public static final double kWheelBase = Units.inchesToMeters(30);
