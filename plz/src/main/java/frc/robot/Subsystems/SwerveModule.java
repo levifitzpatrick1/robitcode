@@ -84,7 +84,7 @@ public class SwerveModule {
     }
 
     public double getAbsolutePositionDegrees() {
-        double rawPosition = absoluteEnCoder.getAbsolutePosition().getValue();
+        double rawPosition = absoluteEnCoder.getAbsolutePosition().getValue() + absoluteEnCoderOffset;
         double angle = rawPosition * 360.0;
         return (angle * (absoluteEnCoderReversed ? -1 : 1));
     }

@@ -11,7 +11,7 @@ public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.
 public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
 public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60.0;
 public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60.0;
-public static final double kPTurning = .1;
+public static final double kPTurning = .6;
 
 public static final double kPhysicalMaxSpeedMetersPerSecond = Units.feetToMeters(16.5);
 public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
@@ -39,7 +39,7 @@ public static class ModuleSpecificConstants {
         switch (moduleID) {
             // Module 1
             case 1:
-                kAbsoluteEncoderOffset = 0;
+                kAbsoluteEncoderOffset = 0.17724609375;
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 1;
 
@@ -49,7 +49,7 @@ public static class ModuleSpecificConstants {
 
             // Module 2
             case 2:
-                kAbsoluteEncoderOffset = 0;
+                kAbsoluteEncoderOffset = -0.886474609375;
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 2;
 
@@ -59,7 +59,7 @@ public static class ModuleSpecificConstants {
 
             // Module 3
             case 3:                
-                kAbsoluteEncoderOffset = 0;
+                kAbsoluteEncoderOffset = -0.18505859375;
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 3;
 
@@ -69,7 +69,7 @@ public static class ModuleSpecificConstants {
 
             // Module 4
             case 4:
-                kAbsoluteEncoderOffset = 0;
+                kAbsoluteEncoderOffset = -0.7998046875;
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 4;
 
@@ -123,7 +123,7 @@ public static class ModuleSpecificConstants {
             // Front Left
             case "FL":
                 // Other Bot
-                kdriveEncoderReversed = false;
+                kdriveEncoderReversed = true;
                 kturningEncoderReversed = true;
 
                 kdriveMotorID = 11;
@@ -142,7 +142,7 @@ public static class ModuleSpecificConstants {
             // Front Right
             case "FR":
                 //Other Bot
-                kdriveEncoderReversed = true;
+                kdriveEncoderReversed = false;
                 kturningEncoderReversed = true;
 
                 kdriveMotorID = 17;
@@ -160,7 +160,7 @@ public static class ModuleSpecificConstants {
             // Back Left
             case "BL":
                 //Other Bot
-                kdriveEncoderReversed = false;
+                kdriveEncoderReversed = true;
                 kturningEncoderReversed = true;
 
                 kdriveMotorID = 13;
@@ -179,7 +179,7 @@ public static class ModuleSpecificConstants {
             case "BR":
 
                 //Other Bot
-                kdriveEncoderReversed = true;
+                kdriveEncoderReversed = false;
                 kturningEncoderReversed = true;
 
                 kdriveMotorID = 15;
