@@ -135,8 +135,8 @@ public static class ModuleSpecificConstants {
                 // kdriveEncoderReversed = false;
                 // kturningEncoderReversed = true;
 
-                // kdriveMotorID = 11;
-                // kturningMotorID = 12;
+                // kdriveMotorID = 18;
+                // kturningMotorID = 17;
                 // break;
             
             // Front Right
@@ -153,8 +153,8 @@ public static class ModuleSpecificConstants {
                 // kdriveEncoderReversed = true;
                 // kturningEncoderReversed = true;
 
-                // kdriveMotorID = 17;
-                // kturningMotorID = 18;
+                // kdriveMotorID = 12;
+                // kturningMotorID = 11;
                 // break;
 
             // Back Left
@@ -171,8 +171,8 @@ public static class ModuleSpecificConstants {
                 // kdriveEncoderReversed = false;
                 // kturningEncoderReversed = true;
 
-                // kdriveMotorID = 13;
-                // kturningMotorID = 14;
+                // kdriveMotorID = 16;
+                // kturningMotorID = 15;
                 // break;
 
             // Back Right
@@ -190,8 +190,8 @@ public static class ModuleSpecificConstants {
                 // kdriveEncoderReversed = true;
                 // kturningEncoderReversed = true;
 
-                // kdriveMotorID = 15;
-                // kturningMotorID = 16;
+                // kdriveMotorID = 14;
+                // kturningMotorID = 13;
                 // break;
             
         }
