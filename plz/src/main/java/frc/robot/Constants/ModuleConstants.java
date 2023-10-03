@@ -79,7 +79,7 @@ public static class ModuleSpecificConstants {
 
             // Module 5
             case 5:
-                kAbsoluteEncoderOffset = 0;
+                kAbsoluteEncoderOffset = 0.122;
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 5;
 
@@ -89,7 +89,7 @@ public static class ModuleSpecificConstants {
 
             // Module 6
             case 6:
-                kAbsoluteEncoderOffset = 0;                
+                kAbsoluteEncoderOffset = -0.055;                
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 6;
 
@@ -99,7 +99,7 @@ public static class ModuleSpecificConstants {
 
             // Module 7
             case 7:
-                kAbsoluteEncoderOffset = 0;
+                kAbsoluteEncoderOffset = -.049;
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 7;
 
@@ -109,7 +109,7 @@ public static class ModuleSpecificConstants {
             
             // Module 8
             case 8:
-                kAbsoluteEncoderOffset = 0;
+                kAbsoluteEncoderOffset = 0.3;
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 8;
 
@@ -132,11 +132,11 @@ public static class ModuleSpecificConstants {
 
 
                 //School Bot
-                 kdriveEncoderReversed = false;
+                 kdriveEncoderReversed = true;
                  kturningEncoderReversed = true;
 
-                 kdriveMotorID = 11;
-                 kturningMotorID = 12;
+                 kdriveMotorID = 18;
+                 kturningMotorID = 17;
                  break;
             
             // Front Right
@@ -150,11 +150,11 @@ public static class ModuleSpecificConstants {
                 //break;
 
                 //School Bot
-                 kdriveEncoderReversed = true;
+                 kdriveEncoderReversed = false;
                  kturningEncoderReversed = true;
 
-                 kdriveMotorID = 17;
-                 kturningMotorID = 18;
+                 kdriveMotorID = 12;
+                 kturningMotorID = 11;
                  break;
 
             // Back Left
@@ -171,8 +171,8 @@ public static class ModuleSpecificConstants {
                  kdriveEncoderReversed = false;
                  kturningEncoderReversed = true;
 
-                 kdriveMotorID = 13;
-                 kturningMotorID = 14;
+                 kdriveMotorID = 16;
+                 kturningMotorID = 15;
                  break;
 
             // Back Right
@@ -190,8 +190,8 @@ public static class ModuleSpecificConstants {
                  kdriveEncoderReversed = true;
                  kturningEncoderReversed = true;
 
-                 kdriveMotorID = 15;
-                 kturningMotorID = 16;
+                 kdriveMotorID = 14;
+                 kturningMotorID = 13;
                  break;
             
         }

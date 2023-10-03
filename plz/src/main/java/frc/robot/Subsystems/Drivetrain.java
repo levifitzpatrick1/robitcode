@@ -30,10 +30,10 @@ public class Drivetrain extends SubsystemBase {
     //private final SwerveModule backRightModule = new SwerveModule(1, "BR");
 
     // School Bot
-     private final SwerveModule frontLeftModule = new SwerveModule( 5, "FL");
-     private final SwerveModule frontRightModule = new SwerveModule(6, "FR");
-     private final SwerveModule backLeftModule = new SwerveModule(7, "BL");
-     private final SwerveModule backRightModule = new SwerveModule(8, "BR");
+     private final SwerveModule backLeftModule = new SwerveModule( 5, "BL");
+     private final SwerveModule frontLeftModule = new SwerveModule(6, "FL");
+     private final SwerveModule backRightModule = new SwerveModule(7, "BR");
+     private final SwerveModule frontRightModule = new SwerveModule(8, "FR");
 
     private Pigeon2 gyro = new Pigeon2(62);
     private AHRS navx = new AHRS(SPI.Port.kMXP);
