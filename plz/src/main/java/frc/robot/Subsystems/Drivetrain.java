@@ -24,16 +24,16 @@ import frc.robot.Constants.Constants.VisionConstants;
 public class Drivetrain extends SubsystemBase {
 
     // Other Bot
-    private final SwerveModule frontLeftModule = new SwerveModule( 3, "FL");
-    private final SwerveModule frontRightModule = new SwerveModule(4, "FR");
-    private final SwerveModule backLeftModule = new SwerveModule(2, "BL");
-    private final SwerveModule backRightModule = new SwerveModule(1, "BR");
+    //private final SwerveModule frontLeftModule = new SwerveModule( 3, "FL");
+    //private final SwerveModule frontRightModule = new SwerveModule(4, "FR");
+    //private final SwerveModule backLeftModule = new SwerveModule(2, "BL");
+    //private final SwerveModule backRightModule = new SwerveModule(1, "BR");
 
     // School Bot
-    // private final SwerveModule frontLeftModule = new SwerveModule( 5, "FL");
-    // private final SwerveModule frontRightModule = new SwerveModule(6, "FR");
-    // private final SwerveModule backLeftModule = new SwerveModule(7, "BL");
-    // private final SwerveModule backRightModule = new SwerveModule(8, "BR");
+     private final SwerveModule frontLeftModule = new SwerveModule( 5, "FL");
+     private final SwerveModule frontRightModule = new SwerveModule(6, "FR");
+     private final SwerveModule backLeftModule = new SwerveModule(7, "BL");
+     private final SwerveModule backRightModule = new SwerveModule(8, "BR");
 
     private Pigeon2 gyro = new Pigeon2(62);
     private AHRS navx = new AHRS(SPI.Port.kMXP);
