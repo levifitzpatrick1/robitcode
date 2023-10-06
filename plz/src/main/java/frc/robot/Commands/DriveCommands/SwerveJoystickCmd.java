@@ -37,7 +37,7 @@ public class SwerveJoystickCmd extends CommandBase {
     public void execute() {
         double xSpeed = -ySpdFunction.get();
         double ySpeed = -xSpdFunction.get();
-        double rot = rotFunction.get();
+        double rot = -rotFunction.get();
 
         xSpeed = Math.abs(xSpeed) < OIConstants.kDeadband ? 0 : xSpeed;
         ySpeed = Math.abs(ySpeed) < OIConstants.kDeadband ? 0 : ySpeed;
@@ -48,6 +48,7 @@ public class SwerveJoystickCmd extends CommandBase {
         rot = rotLimiter.calculate(rot);
 
         // While holding the button the robot is robot oriented, else its field oriented
+
         ChassisSpeeds chassisSpeeds;
        if (fieldOrientedFunction.get()) {
             chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rot);

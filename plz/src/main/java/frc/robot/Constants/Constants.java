@@ -68,7 +68,7 @@ public class Constants {
             new Rotation3d(0,0,0)
         );
 
-        public static final String kFrontCamName = "Camera 1";
+        public static final String kFrontCamName = "Cam1";
     }
 
 

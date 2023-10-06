@@ -8,6 +8,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -38,8 +39,7 @@ public class Drivetrain extends SubsystemBase {
     private Pigeon2 gyro = new Pigeon2(62);
     private AHRS navx = new AHRS(SPI.Port.kMXP);
 
-
-
+    public PIDController angularPID = new PIDController(.035,0,0);
 
     public PhotonCameraWrapper FrontCam;
 
@@ -101,6 +101,15 @@ public class Drivetrain extends SubsystemBase {
         };
     }
 
+    public ChassisSpeeds getChassisSpeeds() {
+        return DriveConstants.kDriveKinematics.toChassisSpeeds(
+            frontLeftModule.getState(),
+            frontRightModule.getState(),
+            backLeftModule.getState(),
+            backRightModule.getState()
+        );
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Robot Heading", getHeading());
@@ -151,7 +160,7 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("FR Turn Encoder Val", Math.toDegrees(frontRightModule.getTurnPosition()));
         SmartDashboard.putNumber("BL Turn Encoder Val", Math.toDegrees(backLeftModule.getTurnPosition()));
         SmartDashboard.putNumber("BR Turn Encoder Val", Math.toDegrees(backRightModule.getTurnPosition()));
-        
+
     }
 
 
@@ -170,14 +179,18 @@ public class Drivetrain extends SubsystemBase {
         PhotonPipelineResult result = FrontCam.photonCamera.getLatestResult();
 
         if (result.hasTargets() && (result.getBestTarget().getFiducialId() == targetID || targetID == 99)) {
-            SmartDashboard.putNumber("vision target id", result.getBestTarget().getFiducialId());
-            SmartDashboard.putNumber("vision target yaw", result.getBestTarget().getYaw());
+            int foundTargetID = result.getBestTarget().getFiducialId();
             double yaw = result.getBestTarget().getYaw();
-            double yawRate = result.getBestTarget().getYaw();
-            double yawSetpoint = yaw + yawRate * 0.1;
-            double yawError = yawSetpoint - getHeading();
-            double yawOutput = yawError * DriveConstants.kVisionRotationP;
-            return yawOutput;
+            SmartDashboard.putNumber("vision target id", foundTargetID);
+            SmartDashboard.putNumber("vision target yaw", yaw);
+
+            double rotspeed = angularPID.calculate(result.getBestTarget().getYaw(), 0);
+            ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+                0, 0, rotspeed, getRotation2d());
+
+            SwerveModuleState[] states = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+            setModuleStates(states);
+            return rotspeed;
         } else {
             return 0;
         }

@@ -41,7 +41,7 @@ public class RobotContainer {
       .whileTrue(new TrackTargetIDRotCmd(drivetrain, 1));
 
       new JoystickButton(driverController, OIConstants.kXboxYButton)
-      .whileTrue(new TrackTargetIDRotCmd(drivetrain, 2));
+      .whileTrue(new TrackTargetIDRotCmd(drivetrain, 3));
   }
 
  
