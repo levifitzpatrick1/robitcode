@@ -39,19 +39,32 @@ public class Drivetrain extends SubsystemBase {
     private Pigeon2 gyro = new Pigeon2(62);
     private AHRS navx = new AHRS(SPI.Port.kMXP);
 
-    public PIDController angularPID = new PIDController(.035,0,0);
+    public PIDController angularPID = new PIDController(
+        DriveConstants.kVisionRotationP,
+        DriveConstants.kVisionRotationI,
+        DriveConstants.kVisionRotationD
+        );
+
+    public PIDController translationPID = 
+        new PIDController(
+        DriveConstants.kVisionTranslationP,
+        DriveConstants.kVisionTranslationI,
+        DriveConstants.kVisionTranslationD
+        );
 
     public PhotonCameraWrapper FrontCam;
 
- private final SwerveDrivePoseEstimator positionEstimator = new SwerveDrivePoseEstimator(
-    DriveConstants.kDriveKinematics,
-    getRotation2d(),
-    getModulePositions(),
-    new Pose2d()
+    private final SwerveDrivePoseEstimator positionEstimator = 
+        new SwerveDrivePoseEstimator(
+        DriveConstants.kDriveKinematics,
+        getRotation2d(),
+        getModulePositions(),
+        new Pose2d()
         );
     
 
     public Drivetrain() {
+
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -59,56 +72,9 @@ public class Drivetrain extends SubsystemBase {
         }).start();
 
         zeroHeading();
-
         FrontCam = new PhotonCameraWrapper(VisionConstants.kFrontCamName, VisionConstants.kFrontRobotToCam);
     }
 
-    public void zeroHeading() {
-        if (DriveConstants.kPidgeonGyro) {
-            gyro.reset();
-        } else {
-            navx.reset();
-        }
-    }
-
-    public void resetOdometry(Pose2d pose) {
-        positionEstimator.update(getRotation2d(), getModulePositions());
-        positionEstimator.resetPosition(getRotation2d(), getModulePositions(), pose);
-    }
-
-    public double getHeading() {
-        if (DriveConstants.kPidgeonGyro) {
-            return gyro.getAngle();
-        } else {
-            return navx.getAngle();
-        }
-    }
-
-
-    public Rotation2d getRotation2d() {
-        return Rotation2d.fromDegrees(getHeading());
-    }
-    
-
-    
-
-    public SwerveModulePosition[] getModulePositions() {
-        return new SwerveModulePosition[] {
-            frontLeftModule.getModulePosition(),
-            frontRightModule.getModulePosition(),
-            backLeftModule.getModulePosition(),
-            backRightModule.getModulePosition()
-        };
-    }
-
-    public ChassisSpeeds getChassisSpeeds() {
-        return DriveConstants.kDriveKinematics.toChassisSpeeds(
-            frontLeftModule.getState(),
-            frontRightModule.getState(),
-            backLeftModule.getState(),
-            backRightModule.getState()
-        );
-    }
 
     @Override
     public void periodic() {
@@ -122,13 +88,13 @@ public class Drivetrain extends SubsystemBase {
 
     }
     
-    public void stopModules() {
-        frontLeftModule.stop();
-        frontRightModule.stop();
-        backLeftModule.stop();
-        backRightModule.stop();
-    }
 
+    // ------ Gets ------ //
+    
+    /**
+     * Normalizes wheel speeds
+     * @return Lowest kMaxModuleSpeed
+     */
     public double getLowestSpeed() {
         double[] speeds = new double[4];
         speeds[0] = frontLeftModule.getSpeed();
@@ -143,6 +109,106 @@ public class Drivetrain extends SubsystemBase {
         }
         return lowest;
     }
+
+    /**
+     * Gets the current state of the drivetrain
+     * @return ChassisSpeeds from ModuleStates
+     */
+    public ChassisSpeeds getChassisSpeeds() {
+        return DriveConstants.kDriveKinematics.toChassisSpeeds(
+            frontLeftModule.getState(),
+            frontRightModule.getState(),
+            backLeftModule.getState(),
+            backRightModule.getState()
+        );
+    }
+
+    /**
+     * Gets the current module positions
+     * @return List of SwerveModulePositions
+     */
+    public SwerveModulePosition[] getModulePositions() {
+        return new SwerveModulePosition[] {
+            frontLeftModule.getModulePosition(),
+            frontRightModule.getModulePosition(),
+            backLeftModule.getModulePosition(),
+            backRightModule.getModulePosition()
+        };
+    }
+
+    /**
+     * Gets the current robot heading from the gyro
+     * @return Double representing gyro degrees
+     */
+    public double getHeading() {
+        if (DriveConstants.kPidgeonGyro) {
+            return gyro.getAngle();
+        } else {
+            return navx.getAngle();
+        }
+    }
+
+    /**
+     * Gets the current robot rotation from the gyro
+     * @return Rotation2d from gyro degrees
+     */
+    public Rotation2d getRotation2d() {
+        return Rotation2d.fromDegrees(getHeading());
+    }
+
+
+    // ------ Odometry ------ //
+
+    /**
+     * Resets the current odometry to the given pose
+     * @param pose
+     */
+    public void resetOdometry(Pose2d pose) {
+        positionEstimator.update(getRotation2d(), getModulePositions());
+        positionEstimator.resetPosition(getRotation2d(), getModulePositions(), pose);
+    }
+
+    /**
+     * Updates the robot's position on the field using the encoders gyro and vision
+     */
+    public void updateOdometry() {
+        positionEstimator.update(getRotation2d(), getModulePositions());
+
+        Optional<EstimatedRobotPose> result = FrontCam.getEstimatedGlobalPose(positionEstimator.getEstimatedPosition());
+
+        if (result.isPresent()) {
+            EstimatedRobotPose camPose = result.get();
+            positionEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+        }
+    }
+
+    // ------ Commands ------ //
+
+    /**
+     * Stops all modules
+     */
+    public void stopModules() {
+        frontLeftModule.stop();
+        frontRightModule.stop();
+        backLeftModule.stop();
+        backRightModule.stop();
+    }
+
+    /**
+     * Resets the gyro to 0
+     */
+    public void zeroHeading() {
+        if (DriveConstants.kPidgeonGyro) {
+            gyro.reset();
+        } else {
+            navx.reset();
+        }
+    }
+
+    /**
+     * Sets the desired states for the swerve modules
+     * @param desiredStates List of desired states for the swerve modules
+     */
 
     public void setModuleStates (SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, getLowestSpeed());
@@ -164,19 +230,15 @@ public class Drivetrain extends SubsystemBase {
     }
 
 
-    public void updateOdometry() {
-        positionEstimator.update(getRotation2d(), getModulePositions());
 
-        Optional<EstimatedRobotPose> result = FrontCam.getEstimatedGlobalPose(positionEstimator.getEstimatedPosition());
-
-        if (result.isPresent()) {
-            EstimatedRobotPose camPose = result.get();
-            positionEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
-        }
-    }
-
+/**
+ * Tracks the rotation of a target with a given ID
+ * @param targetID ID of the target to track. Set to 99 to track any target
+ * @return Rotation speed to track the target
+ */
     public double trackTargetIDRotation(Integer targetID) {
         PhotonPipelineResult result = FrontCam.photonCamera.getLatestResult();
+        double rotspeed;
 
         if (result.hasTargets() && (result.getBestTarget().getFiducialId() == targetID || targetID == 99)) {
             int foundTargetID = result.getBestTarget().getFiducialId();
@@ -184,16 +246,16 @@ public class Drivetrain extends SubsystemBase {
             SmartDashboard.putNumber("vision target id", foundTargetID);
             SmartDashboard.putNumber("vision target yaw", yaw);
 
-            double rotspeed = angularPID.calculate(result.getBestTarget().getYaw(), 0);
+            rotspeed = angularPID.calculate(result.getBestTarget().getYaw(), 0);
             ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                 0, 0, rotspeed, getRotation2d());
 
             SwerveModuleState[] states = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
             setModuleStates(states);
-            return rotspeed;
         } else {
-            return 0;
+            rotspeed = 0;
         }
+        return rotspeed;
     }
 
 }

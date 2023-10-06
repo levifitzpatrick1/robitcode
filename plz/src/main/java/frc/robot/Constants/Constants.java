@@ -52,9 +52,14 @@ public class Constants {
             new Translation2d(-kWheelBase / 2, -kTrackWidth / 2)
         );
 
-        public static double kVisionRotationP;
+        public static double kVisionRotationP = 0.35;
+        public static double kVisionRotationI = 0.00;
+        public static double kVisionRotationD = 0.00;
+        
 
-        public static double kVisionTranslationP;
+        public static double kVisionTranslationP = 0.00;
+        public static double kVisionTranslationI = 0.00;
+        public static double kVisionTranslationD = 0.00;
 
 
     }

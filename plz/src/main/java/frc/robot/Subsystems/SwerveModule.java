@@ -30,6 +30,12 @@ public class SwerveModule {
     private final ModuleSpecificConstants constants;
 
 
+    /**
+     * Creates a new SwerveModule with the given moduleID and moduleLocation
+     * {@link ModuleSpecificConstants} is used to get the constants for the module
+     * @param moduleID The ID of the module. Each module has a unique ID located on the module
+     * @param moduleLocation Where the module is located on the robot (FL, FR, BL, BR)
+     */
     public SwerveModule(int moduleID, String moduleLocation)
     {
         constants = new ModuleSpecificConstants(moduleID, moduleLocation);
@@ -61,49 +67,90 @@ public class SwerveModule {
 
         resetEncoders();
     }
+
+    // ------- Gets ------- //
     
+    /**
+     * gets the drive position from the encoder based on the conversion factor
+     * @return the drive position in meters
+     */
     public double getDrivePosition() {
         return driveEncoder.getPosition();
     }
 
+    /**
+     * Gets the drive velocity from the encoder based on the conversion factor
+     * @return the drive velocity in meters per second
+     */
     public double getDriveVelocity() {
         return driveEncoder.getVelocity();
     }
 
+    /**
+     * Gets the turn position from the encoder based on the conversion factor
+     * @return the turn position in radians
+     */
     public double getTurnPosition() {
         return turnEncoder.getPosition();
     }
 
-    
+    /**
+     * Gets the turn velocity from the encoder based on the conversion factor
+     * @return the turn velocity in radians per second
+     */
     public double getTurnVelocity() {
         return turnEncoder.getVelocity();
     }
 
+    /**
+     * Gets the position of the absolute encoder
+     * @return the absolute position in radians
+     */
     public double getAbsolutePositionRadians() {
         return Math.toRadians(getAbsolutePositionDegrees());
     }
 
+    /**
+     * Gets the position of the absolute encoder
+     * @return the absolute position in degrees
+     */
     public double getAbsolutePositionDegrees() {
         double rawPosition = absoluteEnCoder.getAbsolutePosition().getValue() + absoluteEnCoderOffset;
         double angle = rawPosition * 360.0;
         return (angle * (absoluteEnCoderReversed ? -1 : 1));
     }
-    
-    
 
+    /**
+     * Gets the position of the module
+     * @return the position of the module as a SwerveModulePosition
+     */
+    public SwerveModulePosition getModulePosition() {
+        return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getTurnPosition()));
+    }
+    
+    /**
+     * Gets the state of the module as a with the drive velocity and turn position
+     * @return the state of the module as a SwerveModuleState
+     */
+    public SwerveModuleState getState() {
+        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurnPosition()));
+    }
+
+    // ------- Commands ------- //
+
+    /**
+     * Resets the Drive Encoder to 0
+     * Resets the Turn Encoder to the absolute encoder position in radians
+     */
     public void resetEncoders() {
         driveEncoder.setPosition(0);
         turnEncoder.setPosition(getAbsolutePositionRadians());
     }
 
-    public SwerveModulePosition getModulePosition() {
-        return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getTurnPosition()));
-    }
-    
-    public SwerveModuleState getState() {
-        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurnPosition()));
-    }
-
+    /**
+     * Sets the desired state of the module
+     * @param state the desired state of the module as a SwerveModuleState
+     */
     public void setDesiredState(SwerveModuleState state) {
 
         if (Math.abs(state.speedMetersPerSecond) < 0.1) {
