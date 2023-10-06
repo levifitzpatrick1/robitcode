@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Commands.DriveCommands.ResetHeadingCmd;
 import frc.robot.Commands.DriveCommands.SwerveJoystickCmd;
-import frc.robot.Commands.VisionCommands.TrackTargetIDRotCmd;
+import frc.robot.Commands.VisionCommands.TrackTargetIDPosCmd;
 import frc.robot.Constants.Constants.OIConstants;
 import frc.robot.Subsystems.Drivetrain;
 
@@ -27,7 +27,8 @@ public class RobotContainer {
       () -> driverController.getRawAxis(OIConstants.kXboxLeftXAxis),
       () -> driverController.getRawAxis(OIConstants.kXboxLeftYAxis),
       () -> driverController.getRawAxis(OIConstants.kXboxRightXAxis),
-      () -> driverController.getRawButton(OIConstants.kXboxAButton)
+      () -> driverController.getRawButton(OIConstants.kXboxAButton),
+      () -> driverController.getRawButton(OIConstants.kXboxYButton)
       ));
 
     configureBindings();
@@ -38,10 +39,8 @@ public class RobotContainer {
       .onTrue(new ResetHeadingCmd(drivetrain));
 
     new JoystickButton(driverController, OIConstants.kXboxXButton)
-      .whileTrue(new TrackTargetIDRotCmd(drivetrain, 1));
+      .whileTrue(new TrackTargetIDPosCmd(drivetrain, 99));
 
-      new JoystickButton(driverController, OIConstants.kXboxYButton)
-      .whileTrue(new TrackTargetIDRotCmd(drivetrain, 3));
   }
 
  

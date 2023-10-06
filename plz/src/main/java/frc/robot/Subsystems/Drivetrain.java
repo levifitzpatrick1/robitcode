@@ -12,6 +12,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -256,6 +257,44 @@ public class Drivetrain extends SubsystemBase {
             rotspeed = 0;
         }
         return rotspeed;
+    }
+
+
+    /**
+     * Follows the target while maintaing an X distance of 1 meter
+     * @param targetID ID of the target to track. Set to 99 to track any target
+     * @return Translation speed to track the target
+     */
+    public ChassisSpeeds trackTargetIDPosition(Integer targetID) {
+        PhotonPipelineResult result = FrontCam.photonCamera.getLatestResult();
+        double rotspeed;
+        double x;
+        double y;
+        double vx;
+        double vy;
+        Transform3d cameraToTarget;
+
+        if (result.hasTargets() && (result.getBestTarget().getFiducialId() == targetID || targetID == 99)){
+            cameraToTarget = result.getBestTarget().getBestCameraToTarget();
+
+            x = cameraToTarget.getX();
+            y = cameraToTarget.getY();
+
+            rotspeed = angularPID.calculate(result.getBestTarget().getYaw(), 0);
+
+            vx = translationPID.calculate(x, 1);
+            vy = translationPID.calculate(y, 0);
+
+            ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+                vx, vy, rotspeed, getRotation2d());
+
+            SwerveModuleState[] states = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+            setModuleStates(states);
+
+            return speeds;
+        } else {
+            return new ChassisSpeeds(0, 0, 0);
+        }
     }
 
 }

@@ -14,15 +14,18 @@ public class SwerveJoystickCmd extends CommandBase {
     private final Drivetrain drivetrain;
     private final Supplier<Double> xSpdFunction, ySpdFunction, rotFunction;
     private final Supplier<Boolean> fieldOrientedFunction;
+    private final Supplier<Boolean> visionTracking;
     private final SlewRateLimiter xLimiter, yLimiter, rotLimiter;
+    
 
     public SwerveJoystickCmd(Drivetrain drivetrain, Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction,
-            Supplier<Double> rotFunction, Supplier<Boolean> fieldOrientedFunction) {
+            Supplier<Double> rotFunction, Supplier<Boolean> fieldOrientedFunction, Supplier<Boolean> visionTracking) {
         this.drivetrain = drivetrain;
         this.xSpdFunction = xSpdFunction;
         this.ySpdFunction = ySpdFunction;
         this.rotFunction = rotFunction;
         this.fieldOrientedFunction = fieldOrientedFunction;
+        this.visionTracking = visionTracking;
         this.xLimiter = new SlewRateLimiter(DriveConstants.kMaxAcceleration);
         this.yLimiter = new SlewRateLimiter(DriveConstants.kMaxAcceleration);
         this.rotLimiter = new SlewRateLimiter(DriveConstants.kMaxAngularAcceleration);
@@ -47,8 +50,11 @@ public class SwerveJoystickCmd extends CommandBase {
         ySpeed = yLimiter.calculate(ySpeed);
         rot = rotLimiter.calculate(rot);
 
-        // While holding the button the robot is robot oriented, else its field oriented
+        if (visionTracking.get()) {
+            rot = drivetrain.trackTargetIDRotation(99);
+        }
 
+        // While holding the button the robot is robot oriented, else its field oriented
         ChassisSpeeds chassisSpeeds;
        if (fieldOrientedFunction.get()) {
             chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rot);
