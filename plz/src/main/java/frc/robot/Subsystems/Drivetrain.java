@@ -151,6 +151,7 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("FR Turn Encoder Val", Math.toDegrees(frontRightModule.getTurnPosition()));
         SmartDashboard.putNumber("BL Turn Encoder Val", Math.toDegrees(backLeftModule.getTurnPosition()));
         SmartDashboard.putNumber("BR Turn Encoder Val", Math.toDegrees(backRightModule.getTurnPosition()));
+        
     }
 
 
@@ -165,22 +166,20 @@ public class Drivetrain extends SubsystemBase {
         }
     }
 
-    public void trackTargetIDRotation(Integer targetID) {
+    public double trackTargetIDRotation(Integer targetID) {
         PhotonPipelineResult result = FrontCam.photonCamera.getLatestResult();
 
         if (result.hasTargets() && (result.getBestTarget().getFiducialId() == targetID || targetID == 99)) {
+            SmartDashboard.putNumber("vision target id", result.getBestTarget().getFiducialId());
+            SmartDashboard.putNumber("vision target yaw", result.getBestTarget().getYaw());
             double yaw = result.getBestTarget().getYaw();
             double yawRate = result.getBestTarget().getYaw();
             double yawSetpoint = yaw + yawRate * 0.1;
             double yawError = yawSetpoint - getHeading();
             double yawOutput = yawError * DriveConstants.kVisionRotationP;
-            setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(
-                new ChassisSpeeds(0, 0, yawOutput)
-            ));
+            return yawOutput;
         } else {
-            setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(
-                new ChassisSpeeds(0, 0, 0)
-            ));
+            return 0;
         }
     }
 
