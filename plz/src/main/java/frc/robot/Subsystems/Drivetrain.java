@@ -40,7 +40,8 @@ public class Drivetrain extends SubsystemBase {
     private Pigeon2 gyro = new Pigeon2(62);
     private AHRS navx = new AHRS(SPI.Port.kMXP);
 
-    public PIDController angularPID = new PIDController(
+    public PIDController angularPID = 
+        new PIDController(
         DriveConstants.kVisionRotationP,
         DriveConstants.kVisionRotationI,
         DriveConstants.kVisionRotationD
@@ -86,6 +87,13 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("BR Cancoder", backRightModule.getAbsolutePositionDegrees());
 
         positionEstimator.update(getRotation2d(), getModulePositions());
+
+        angularPID = 
+        new PIDController(
+        DriveConstants.kVisionRotationP,
+        DriveConstants.kVisionRotationI,
+        DriveConstants.kVisionRotationD
+        );
 
     }
     
@@ -251,12 +259,12 @@ public class Drivetrain extends SubsystemBase {
             SmartDashboard.putNumber("vision target id", foundTargetID);
             SmartDashboard.putNumber("vision target yaw", yaw);
 
-            rotspeed = angularPID.calculate(result.getBestTarget().getYaw(), 0);
-            ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                0, 0, rotspeed, getRotation2d());
+            rotspeed = angularPID.calculate(yaw, 0);
+        //     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+        //         0, 0, rotspeed, getRotation2d());
 
-            SwerveModuleState[] states = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
-            setModuleStates(states);
+        //    SwerveModuleState[] states = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+        //    setModuleStates(states);
         } else {
             rotspeed = 0;
         }
@@ -281,8 +289,8 @@ public class Drivetrain extends SubsystemBase {
         if (result.hasTargets() && (result.getBestTarget().getFiducialId() == targetID || targetID == 99)){
             cameraToTarget = result.getBestTarget().getBestCameraToTarget();
 
-            x = cameraToTarget.getX();
-            y = cameraToTarget.getY();
+            x = -cameraToTarget.getX();
+            y = -cameraToTarget.getY();
 
             rotspeed = angularPID.calculate(result.getBestTarget().getYaw(), 0);
 

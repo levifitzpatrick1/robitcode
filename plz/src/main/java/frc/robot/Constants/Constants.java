@@ -54,11 +54,11 @@ public class Constants implements Loggable {
                 new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
         @Log
-        public static double kVisionRotationP = 2.00;
+        public static double kVisionRotationP = 0.03;
         @Log
         public static double kVisionRotationI = 0.00;
         @Log
-        public static double kVisionRotationD = 3.00;
+        public static double kVisionRotationD = 0.00;
 
         @Config
         void setVisionPID(double p, double i, double d) {
@@ -67,7 +67,7 @@ public class Constants implements Loggable {
             kVisionRotationD = d;
         }
 
-        public static double kVisionTranslationP = 0.00;
+        public static double kVisionTranslationP = 0.50;
         public static double kVisionTranslationI = 0.00;
         public static double kVisionTranslationD = 0.00;
     }
@@ -76,7 +76,7 @@ public class Constants implements Loggable {
 
         public static final double kFrontCameraPitch = 0;
         public static final Transform3d kFrontRobotToCam = new Transform3d(
-                new Translation3d(0.5, 0.5, 0.5),
+                new Translation3d(0, 0, 0),
                 new Rotation3d(0, 0, 0));
 
         public static final String kFrontCamName = "Cam1";
