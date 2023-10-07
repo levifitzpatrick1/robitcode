@@ -143,7 +143,11 @@ public class Drivetrain extends SubsystemBase {
      */
     public double getHeading() {
         if (DriveConstants.kPidgeonGyro) {
-            return gyro.getAngle();
+            if (DriveConstants.kPidgeonInverse) {
+                return -gyro.getAngle();
+            } else {
+                return gyro.getAngle();
+            }
         } else {
             return navx.getAngle();
         }

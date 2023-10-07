@@ -38,6 +38,7 @@ public class Constants {
     public static class DriveConstants {
 
         public static final boolean kPidgeonGyro = true;
+        public static final boolean kPidgeonInverse = true;
 
         public static final double kTrackWidth = Units.inchesToMeters(30);
         public static final double kWheelBase = Units.inchesToMeters(30);
@@ -52,9 +53,9 @@ public class Constants {
             new Translation2d(-kWheelBase / 2, -kTrackWidth / 2)
         );
 
-        public static double kVisionRotationP = 0.35;
+        public static double kVisionRotationP = 5.0;
         public static double kVisionRotationI = 0.00;
-        public static double kVisionRotationD = 0.00;
+        public static double kVisionRotationD = 2.0;
         
 
         public static double kVisionTranslationP = 0.00;
