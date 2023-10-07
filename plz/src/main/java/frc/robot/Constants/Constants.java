@@ -6,8 +6,11 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
+import io.github.oblarg.oblog.annotations.Log;
 
-public class Constants {
+public class Constants implements Loggable {
 
     public static class OIConstants {
         public static final int kDriverControllerPort = 0;
@@ -30,12 +33,10 @@ public class Constants {
         public static final int kXboxLeftYAxis = 1;
         public static final int kXboxRightXAxis = 4;
         public static final int kXboxRightYAxis = 5;
-        
-
 
     }
 
-    public static class DriveConstants {
+    public static class DriveConstants implements Loggable {
 
         public static final boolean kPidgeonGyro = true;
         public static final boolean kPidgeonInverse = true;
@@ -47,35 +48,38 @@ public class Constants {
         public static final double kMaxAngularAcceleration = 3;
 
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-            new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-            new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-            new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-            new Translation2d(-kWheelBase / 2, -kTrackWidth / 2)
-        );
+                new Translation2d(kWheelBase / 2, kTrackWidth / 2),
+                new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+                new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+                new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
+        @Log
         public static double kVisionRotationP = 2.00;
+        @Log
         public static double kVisionRotationI = 0.00;
+        @Log
         public static double kVisionRotationD = 3.00;
-        
+
+        @Config
+        void setVisionPID(double p, double i, double d) {
+            kVisionRotationP = p;
+            kVisionRotationI = i;
+            kVisionRotationD = d;
+        }
 
         public static double kVisionTranslationP = 0.00;
         public static double kVisionTranslationI = 0.00;
         public static double kVisionTranslationD = 0.00;
-
-
     }
 
     public static class VisionConstants {
 
         public static final double kFrontCameraPitch = 0;
-        public static final Transform3d kFrontRobotToCam = 
-        new Transform3d(
-            new Translation3d(0.5, 0.5, 0.5),
-            new Rotation3d(0,0,0)
-        );
+        public static final Transform3d kFrontRobotToCam = new Transform3d(
+                new Translation3d(0.5, 0.5, 0.5),
+                new Rotation3d(0, 0, 0));
 
         public static final String kFrontCamName = "Cam1";
     }
-
 
 }

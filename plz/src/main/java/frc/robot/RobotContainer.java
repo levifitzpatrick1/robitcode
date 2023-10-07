@@ -13,37 +13,35 @@ import frc.robot.Commands.DriveCommands.SwerveJoystickCmd;
 import frc.robot.Commands.VisionCommands.TrackTargetIDPosCmd;
 import frc.robot.Constants.Constants.OIConstants;
 import frc.robot.Subsystems.Drivetrain;
+import io.github.oblarg.oblog.Loggable;
 
-public class RobotContainer {
+public class RobotContainer implements Loggable {
 
   final Drivetrain drivetrain = new Drivetrain();
-  
+
   private final Joystick driverController = new Joystick(OIConstants.kDriverControllerPort);
 
   public RobotContainer() {
 
     drivetrain.setDefaultCommand(new SwerveJoystickCmd(
-      drivetrain, 
-      () -> driverController.getRawAxis(OIConstants.kXboxLeftXAxis),
-      () -> driverController.getRawAxis(OIConstants.kXboxLeftYAxis),
-      () -> driverController.getRawAxis(OIConstants.kXboxRightXAxis),
-      () -> driverController.getRawButton(OIConstants.kXboxAButton),
-      () -> driverController.getRawButton(OIConstants.kXboxYButton)
-      ));
+        drivetrain,
+        () -> driverController.getRawAxis(OIConstants.kXboxLeftXAxis),
+        () -> driverController.getRawAxis(OIConstants.kXboxLeftYAxis),
+        () -> driverController.getRawAxis(OIConstants.kXboxRightXAxis),
+        () -> driverController.getRawButton(OIConstants.kXboxAButton),
+        () -> driverController.getRawButton(OIConstants.kXboxYButton)));
 
     configureBindings();
   }
 
   private void configureBindings() {
     new JoystickButton(driverController, OIConstants.kXboxBButton)
-      .onTrue(new ResetHeadingCmd(drivetrain));
+        .onTrue(new ResetHeadingCmd(drivetrain));
 
     new JoystickButton(driverController, OIConstants.kXboxXButton)
-      .whileTrue(new TrackTargetIDPosCmd(drivetrain, 99));
+        .whileTrue(new TrackTargetIDPosCmd(drivetrain, 99));
 
   }
-
- 
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");

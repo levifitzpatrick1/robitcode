@@ -8,32 +8,43 @@ import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.Constants;
+import frc.robot.Constants.Constants.DriveConstants;
+import io.github.oblarg.oblog.Logger;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
 
+  private Constants constants;
+  private DriveConstants driveConstants;
+
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     PortForwarder.add(5800, "photonvision.local", 5800);
+    Logger.configureLoggingAndConfig(this, false);
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     m_robotContainer.drivetrain.updateOdometry();
+    Logger.updateEntries();
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
   @Override
-  public void disabledExit() {}
+  public void disabledExit() {
+  }
 
   @Override
   public void autonomousInit() {
@@ -45,10 +56,12 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+  }
 
   @Override
-  public void autonomousExit() {}
+  public void autonomousExit() {
+  }
 
   @Override
   public void teleopInit() {
@@ -58,10 +71,12 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
-  public void teleopExit() {}
+  public void teleopExit() {
+  }
 
   @Override
   public void testInit() {
@@ -69,8 +84,10 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
   @Override
-  public void testExit() {}
+  public void testExit() {
+  }
 }
