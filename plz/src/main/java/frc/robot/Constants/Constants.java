@@ -60,16 +60,26 @@ public class Constants implements Loggable {
         @Log
         public static double kVisionRotationD = 3.00;
 
-        @Config
+        @Config(width = 4, height = 4)
         void setVisionPID(double p, double i, double d) {
             kVisionRotationP = p;
             kVisionRotationI = i;
             kVisionRotationD = d;
         }
 
+        @Log
         public static double kVisionTranslationP = 0.00;
+        @Log
         public static double kVisionTranslationI = 0.00;
+        @Log
         public static double kVisionTranslationD = 0.00;
+
+        @Config(width = 4, height = 4)
+        void setTranslationPID(double p, double i, double d) {
+            kVisionTranslationP = p;
+            kVisionTranslationI = i;
+            kVisionTranslationD = d;
+        }
     }
 
     public static class VisionConstants {
