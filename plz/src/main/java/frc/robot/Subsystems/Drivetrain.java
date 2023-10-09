@@ -8,6 +8,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -22,8 +23,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Constants.DriveConstants;
 import frc.robot.Constants.Constants.VisionConstants;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 
-public class Drivetrain extends SubsystemBase {
+public class Drivetrain extends SubsystemBase implements Loggable {
 
     // Other Bot
     private final SwerveModule frontLeftModule = new SwerveModule( 3, "FL");
@@ -40,6 +43,8 @@ public class Drivetrain extends SubsystemBase {
     private Pigeon2 gyro = new Pigeon2(62);
     private AHRS navx = new AHRS(SPI.Port.kMXP);
 
+    private double desiredHeading = 0;
+
     public PIDController angularPID = 
         new PIDController(
         DriveConstants.kVisionRotationP,
@@ -47,11 +52,18 @@ public class Drivetrain extends SubsystemBase {
         DriveConstants.kVisionRotationD
         );
 
-    public PIDController translationPID = 
+    public PIDController xtranslationPID = 
         new PIDController(
-        DriveConstants.kVisionTranslationP,
-        DriveConstants.kVisionTranslationI,
-        DriveConstants.kVisionTranslationD
+        DriveConstants.kVisionTranslationxP,
+        DriveConstants.kVisionTranslationxI,
+        DriveConstants.kVisionTranslationxD
+        );
+
+    public PIDController ytranslationPID = 
+        new PIDController(
+        DriveConstants.kVisionTranslationyP,
+        DriveConstants.kVisionTranslationyI,
+        DriveConstants.kVisionTranslationyD
         );
 
     public PhotonCameraWrapper FrontCam;
@@ -88,13 +100,24 @@ public class Drivetrain extends SubsystemBase {
 
         positionEstimator.update(getRotation2d(), getModulePositions());
 
-        angularPID = 
+        angularPID.setP(DriveConstants.kVisionRotationP);
+        angularPID.setI(DriveConstants.kVisionRotationI);
+        angularPID.setD(DriveConstants.kVisionRotationD);
+
+
+        xtranslationPID = 
         new PIDController(
-        DriveConstants.kVisionRotationP,
-        DriveConstants.kVisionRotationI,
-        DriveConstants.kVisionRotationD
+        DriveConstants.kVisionTranslationxP,
+        DriveConstants.kVisionTranslationxI,
+        DriveConstants.kVisionTranslationxD
         );
 
+        ytranslationPID =
+        new PIDController(
+        DriveConstants.kVisionTranslationyP,
+        DriveConstants.kVisionTranslationyI,
+        DriveConstants.kVisionTranslationyD
+        );
     }
     
 
@@ -230,16 +253,31 @@ public class Drivetrain extends SubsystemBase {
         backLeftModule.setDesiredState(desiredStates[2]);
         backRightModule.setDesiredState(desiredStates[3]);
 
-        SmartDashboard.putNumber("FL Desired State", desiredStates[0].angle.getDegrees());
-        SmartDashboard.putNumber("FR Desired State", desiredStates[1].angle.getDegrees());
-        SmartDashboard.putNumber("BL Desired State", desiredStates[2].angle.getDegrees());
-        SmartDashboard.putNumber("BR Desired State", desiredStates[3].angle.getDegrees());
+    }
 
-        SmartDashboard.putNumber("FL Turn Encoder Val", Math.toDegrees(frontLeftModule.getTurnPosition()));
-        SmartDashboard.putNumber("FR Turn Encoder Val", Math.toDegrees(frontRightModule.getTurnPosition()));
-        SmartDashboard.putNumber("BL Turn Encoder Val", Math.toDegrees(backLeftModule.getTurnPosition()));
-        SmartDashboard.putNumber("BR Turn Encoder Val", Math.toDegrees(backRightModule.getTurnPosition()));
+    @Log.Graph(name="April Tag Yaw")
+    public double getRotationYawDiff() {
+        PhotonPipelineResult result = FrontCam.photonCamera.getLatestResult();
+        double yaw = 0;
+        if (result.hasTargets()) {
+            yaw = result.getBestTarget().getYaw();
+        }
+        return yaw;
+    }
 
+    @Log
+    public String getRotationPIDValues() {
+        return angularPID.getP() + ", " + angularPID.getI() + ", " + angularPID.getD();
+    }
+
+    @Log
+    public double getHasTarget() {
+        PhotonPipelineResult result = FrontCam.photonCamera.getLatestResult();
+        if (result.hasTargets()) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
 
@@ -255,11 +293,13 @@ public class Drivetrain extends SubsystemBase {
 
         if (result.hasTargets() && (result.getBestTarget().getFiducialId() == targetID || targetID == 99)) {
             int foundTargetID = result.getBestTarget().getFiducialId();
-            double yaw = result.getBestTarget().getYaw();
+            double yaw = Math.toRadians(result.getBestTarget().getYaw());
             SmartDashboard.putNumber("vision target id", foundTargetID);
             SmartDashboard.putNumber("vision target yaw", yaw);
 
             rotspeed = angularPID.calculate(yaw, 0);
+            
+            SmartDashboard.putNumber("speed", rotspeed);
         //     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
         //         0, 0, rotspeed, getRotation2d());
 
@@ -282,20 +322,33 @@ public class Drivetrain extends SubsystemBase {
         double rotspeed;
         double x;
         double y;
+        double rot;
         double vx;
         double vy;
+
         Transform3d cameraToTarget;
 
         if (result.hasTargets() && (result.getBestTarget().getFiducialId() == targetID || targetID == 99)){
             cameraToTarget = result.getBestTarget().getBestCameraToTarget();
 
-            x = -cameraToTarget.getX();
-            y = -cameraToTarget.getY();
+
+            x = cameraToTarget.getX();
+            y = cameraToTarget.getY();
+
+            rot = cameraToTarget.getRotation().getZ();
 
             rotspeed = angularPID.calculate(result.getBestTarget().getYaw(), 0);
 
-            vx = translationPID.calculate(x, 1);
-            vy = translationPID.calculate(y, 0);
+            double angularSetpoint;
+
+            if (rot > 0){
+                angularSetpoint = 180;
+            } else {
+                angularSetpoint = -180;
+            }
+
+            vx = xtranslationPID.calculate(-x, 1);
+            vy = ytranslationPID.calculate(Math.toDegrees(rot), angularSetpoint);
 
             ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                 vx, vy, rotspeed, getRotation2d());

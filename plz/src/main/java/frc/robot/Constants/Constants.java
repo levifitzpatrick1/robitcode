@@ -53,11 +53,8 @@ public class Constants implements Loggable {
                 new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
                 new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
-        @Log
         public static double kVisionRotationP = 0.03;
-        @Log
         public static double kVisionRotationI = 0.00;
-        @Log
         public static double kVisionRotationD = 0.00;
 
         @Config(width = 4, height = 4)
@@ -68,17 +65,31 @@ public class Constants implements Loggable {
         }
 
         @Log
-        public static double kVisionTranslationP = 0.00;
+        public static double kVisionTranslationxP = 0.50;
         @Log
-        public static double kVisionTranslationI = 0.00;
+        public static double kVisionTranslationxI = 0.00;
         @Log
-        public static double kVisionTranslationD = 0.00;
+        public static double kVisionTranslationxD = 0.00;
 
         @Config(width = 4, height = 4)
-        void setTranslationPID(double p, double i, double d) {
-            kVisionTranslationP = p;
-            kVisionTranslationI = i;
-            kVisionTranslationD = d;
+        void setTranslationxPID(double p, double i, double d) {
+            kVisionTranslationxP = p;
+            kVisionTranslationxI = i;
+            kVisionTranslationxD = d;
+        }
+
+        @Log
+        public static double kVisionTranslationyP = 0.50;
+        @Log
+        public static double kVisionTranslationyI = 0.00;
+        @Log
+        public static double kVisionTranslationyD = 0.00;
+
+        @Config(width = 4, height = 4)
+        void setTranslationyPID(double p, double i, double d) {
+            kVisionTranslationyP = p;
+            kVisionTranslationyI = i;
+            kVisionTranslationyD = d;
         }
     }
 
