@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -21,7 +22,8 @@ public class SwerveModule {
     private final RelativeEncoder driveEncoder;
     private final RelativeEncoder turnEncoder;
 
-    private final PIDController turningpiController;
+    private final ProfiledPIDController turningProfiledPIDController;
+    private final PIDController drivePIDController;
 
     private final CANcoder absoluteEnCoder;
     private final double absoluteEnCoderOffset;
@@ -61,9 +63,11 @@ public class SwerveModule {
         driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncoderRPM2MeterPerSec);
         turnEncoder.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
 
-        turningpiController = new PIDController(ModuleConstants.kPTurning, 0, 0);
+        turningProfiledPIDController = new ProfiledPIDController(ModuleConstants.kPTurning, ModuleConstants.kITurning, ModuleConstants.kDTurning, ModuleConstants.kTurningConstraints);
+        drivePIDController = new PIDController(ModuleConstants.kPDrive, ModuleConstants.kIDrive, ModuleConstants.kDDrive);
 
-        turningpiController.enableContinuousInput(-Math.PI, Math.PI);
+        turningProfiledPIDController.setTolerance(ModuleConstants.kTurningTolerance);
+        turningProfiledPIDController.enableContinuousInput(-Math.PI, Math.PI);
 
         resetEncoders();
     }
@@ -159,8 +163,8 @@ public class SwerveModule {
         }
 
         state = SwerveModuleState.optimize(state, getState().angle);
-        driveMotor.set(state.speedMetersPerSecond / constants.kMaxModuleSpeed);
-        turnMotor.set(turningpiController.calculate(getTurnPosition(), state.angle.getRadians()));
+        driveMotor.set(drivePIDController.calculate(getDriveVelocity(), state.speedMetersPerSecond));
+        turnMotor.set(turningProfiledPIDController.calculate(getTurnPosition(), state.angle.getRadians()));
     }
 
     public void stop() {

@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
@@ -56,6 +57,10 @@ public class Constants implements Loggable {
         public static double kVisionRotationP = 0.03;
         public static double kVisionRotationI = 0.00;
         public static double kVisionRotationD = 0.00;
+
+        public static final double kDriveMaxVelocity = Units.inchesToMeters(16.5);
+        public static final double kDriveMaxAcceleration = kDriveMaxVelocity / 60;
+        public static Constraints kDriveConstraints = new Constraints(kDriveMaxVelocity, kDriveMaxAcceleration);
 
         @Config(width = 4, height = 4)
         void setVisionPID(double p, double i, double d) {

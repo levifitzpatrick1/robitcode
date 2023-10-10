@@ -1,5 +1,6 @@
 package frc.robot.Constants;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 
 public class ModuleConstants {
@@ -11,10 +12,23 @@ public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.
 public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
 public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60.0;
 public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60.0;
-public static final double kPTurning = .6;
 
-public static final double kPhysicalMaxSpeedMetersPerSecond = Units.feetToMeters(16.5);
-public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
+
+public static final double kPTurning = .6;
+public static final double kITurning = 0;
+public static final double kDTurning = 0;
+public static final double kTurningTolerance = 0.1;
+public static final double kTurningMaxVelocity = 5676 * 60 * kTurningEncoderRot2Rad;
+public static final double kTurningMaxAcceleration = kTurningMaxVelocity / 60;
+public static final Constraints kTurningConstraints = new Constraints(kTurningMaxVelocity, kTurningMaxAcceleration);
+
+public static final double kPDrive = 1;
+public static final double kIDrive = 0;
+public static final double kDDrive = 0;
+
+public static final double kDriveMaxVelocity = Units.feetToMeters(16.5);
+public static final double kDriveMaxAcceleration = kDriveMaxVelocity / 60;
+
 
 public static class ModuleSpecificConstants {
     //Absolute Encoder Offset and ID

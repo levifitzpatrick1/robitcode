@@ -8,17 +8,12 @@ import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.Constants;
-import frc.robot.Constants.Constants.DriveConstants;
 import io.github.oblarg.oblog.Logger;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-
-  private Constants constants;
-  private DriveConstants driveConstants;
 
   @Override
   public void robotInit() {

@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Commands.DriveCommands.ResetHeadingCmd;
 import frc.robot.Commands.DriveCommands.SwerveJoystickCmd;
 import frc.robot.Commands.VisionCommands.TrackTargetIDPosCmd;
-import frc.robot.Constants.Constants.DriveConstants;
 import frc.robot.Constants.Constants.OIConstants;
 import frc.robot.Subsystems.Drivetrain;
 import io.github.oblarg.oblog.Loggable;
@@ -21,8 +20,6 @@ public class RobotContainer implements Loggable {
   final Drivetrain drivetrain = new Drivetrain();
 
   private final Joystick driverController = new Joystick(OIConstants.kDriverControllerPort);
-
-  private final DriveConstants driveConstants = new DriveConstants();
 
   public RobotContainer() {
 
