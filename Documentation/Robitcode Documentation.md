@@ -1,13 +1,13 @@
 ## Table of Contents
 
 -   [Introduction](#Introduction)
--   Commands
-    -   Drive Commands
-    -   Vision Commands
--   Constants
--   Main Files
--   Subsystems
--  Additional Information
+-   [Commands](#Commands)
+    -   [Drive Commands](#DriveCommands)
+    -   [Vision Commands](#VisionCommands)
+-   [Constants](#Constants)
+-   [Main Files](#MainFiles)
+-   [Subsystems](#Subsystems)
+-  [Additional Information](#AdditionalInformation)
 
 ## Introduction
 
