@@ -2,6 +2,8 @@ package frc.robot.Subsystems;
 
 import java.util.Optional;
 
+import javax.swing.event.DocumentEvent;
+
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.targeting.PhotonPipelineResult;
 
@@ -19,8 +21,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.Constants.DriveConstants;
 import frc.robot.Constants.Constants.VisionConstants;
 import io.github.oblarg.oblog.Loggable;
@@ -42,6 +46,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     private Pigeon2 gyro = new Pigeon2(62);
     private AHRS navx = new AHRS(SPI.Port.kMXP);
+
+    private Timer timer = new Timer();
+    private double initTime = 0;
+    private Double finalTime = null;
+    private boolean isTiming = false;
 
     public PIDController angularPID = 
         new PIDController(
@@ -384,7 +393,36 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
         return speeds;
 
-
     }
 
-}
+    public void getAcceleration(){
+        // Initialize the timer and flags if not already timing
+        if (!isTiming) {
+            timer.reset();
+            timer.start();
+            initTime = timer.get();
+            isTiming = true;
+        }
+
+        // Set the module states to full forward
+        SwerveModuleState[] states = new SwerveModuleState[4];
+        states[0] = new SwerveModuleState(ModuleConstants.kDriveMaxVelocity, new Rotation2d(0));
+        states[1] = new SwerveModuleState(ModuleConstants.kDriveMaxVelocity, new Rotation2d(0));
+        states[2] = new SwerveModuleState(ModuleConstants.kDriveMaxVelocity, new Rotation2d(0));
+        states[3] = new SwerveModuleState(ModuleConstants.kDriveMaxVelocity, new Rotation2d(0));
+        setModuleStates(states);  // Assume setModuleStates() is implemented elsewhere in your code
+
+        // Check if the modules have reached max velocity
+        if (frontLeftModule.getDriveVelocity() >= ModuleConstants.kDriveMaxVelocity) {  // Assume this function exists and returns true when max velocity is reached
+            finalTime = timer.get();
+            double deltaTime = finalTime - initTime;
+            double acceleration = ModuleConstants.kDriveMaxVelocity / deltaTime;
+
+            SmartDashboard.putNumber("Acceleration",  acceleration);
+
+            // Reset timing flag
+            isTiming = false;
+        }
+    }
+    }
+

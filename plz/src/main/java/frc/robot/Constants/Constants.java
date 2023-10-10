@@ -59,9 +59,10 @@ public class Constants implements Loggable {
         public static double kVisionRotationD = 0.00;
 
         public static final double kTurnMaxVelocity = 9.33;
+        public static final double kTurnMaxAcceleration = 773.44;
 
         public static final double kDriveMaxVelocity = Units.feetToMeters(16.5);
-        public static final double kDriveMaxAcceleration = kDriveMaxVelocity / 60;
+        public static final double kDriveMaxAcceleration = 78.63;
         public static Constraints kDriveConstraints = new Constraints(kDriveMaxVelocity, kDriveMaxAcceleration);
 
         @Config(width = 4, height = 4)
