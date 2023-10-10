@@ -75,8 +75,16 @@ Updates SmartDashboard with various sensor readings and updates the PID controll
 
 - **Description**: Tracks the rotation of a target with a given ID.
 - **Returns**: Rotation speed to track the target.
+- [**More Info**](https://github.com/levifitzpatrick1/robitcode/blob/main/Documentation/File%20Specific/Complex%20Functions/trackTargetIDRotation(Integer%20targetID).md)
 
 #### `trackTargetIDPosition(Integer targetID)`
 
 - **Description**: Follows the target while maintaining an X distance of 1 meter.
 - **Returns**: Translation speed to track the target.
+- [**More Info**](https://github.com/levifitzpatrick1/robitcode/blob/main/Documentation/File%20Specific/Complex%20Functions/trackTargetIDPosition(Integer%20targetID).md)
+  
+#### `driveToPosition2D(Pose2d targetPose)`
+
+- **Description:** Moves the robot to the specified 2d Position on the field.
+- **Returns:** Chassis speed to reach that destination.
+- [**More Info**](https://github.com/levifitzpatrick1/robitcode/blob/main/Documentation/File%20Specific/Complex%20Functions/driveToPosition2D(Pose2d%20targetPose).md)
