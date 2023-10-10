@@ -102,4 +102,4 @@ Subsystems are components of the robot that have specific functionalities. They 
 
 ## Additional Information
 
-For more details, please refer to the [README.md](https://github.com/levifitzpatrick1/robitcode/blob/main/README.md) file in the repository.
+If anything is confusing, you can ask Levi, Neesh or Parsh either on discord or in person!
