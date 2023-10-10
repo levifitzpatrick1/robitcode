@@ -98,7 +98,7 @@ Subsystems are components of the robot that have specific functionalities. They 
 
 -   **Purpose**: Represents a single swerve drive module.
 -   **Usage**: Used in the drivetrain subsystem to control individual modules.
-- [**More Info**](obsidian://open?vault=Vaulty%20Boi&file=Robotics%2FDocumentation%2FFile%20Specific%2FSwerve%20Module%20Class%20Documentation)
+- [**More Info**](https://github.com/levifitzpatrick1/robitcode/blob/main/Documentation/File%20Specific/Swerve%20Module%20Class%20Documentation.md)
 
 ## Additional Information
 
