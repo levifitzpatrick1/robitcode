@@ -87,7 +87,7 @@ Subsystems are components of the robot that have specific functionalities. They 
 
 -   **Purpose**: Manages the robot's drivetrain, including motors and sensors.
 -   **Usage**: Used in various commands to control the robot's movement.
-- - [**More Info**](https://github.com/levifitzpatrick1/robitcode/blob/main/Documentation/File%20Specific/Drivetrain%20Class%20Documentation.md)
+-  [**More Info**](https://github.com/levifitzpatrick1/robitcode/blob/main/Documentation/File%20Specific/Drivetrain%20Class%20Documentation.md)
 
 ### [PhotonCameraWrapper.java](https://github.com/levifitzpatrick1/robitcode/blob/main/plz/src/main/java/frc/robot/Subsystems/PhotonCameraWrapper.java)
 
