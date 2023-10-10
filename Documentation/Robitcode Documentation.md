@@ -2,12 +2,12 @@
 
 -   [Introduction](#Introduction)
 -   [Commands](#Commands)
-    -   [Drive Commands](#DriveCommands)
-    -   [Vision Commands](#VisionCommands)
+    -   [Drive Commands](#Drive-Commands)
+    -   [Vision Commands](#Vision-Commands)
 -   [Constants](#Constants)
 -   [Main Files](#MainFiles)
 -   [Subsystems](#Subsystems)
--  [Additional Information](#AdditionalInformation)
+-  [Additional Information](#Additional-Information)
 
 ## Introduction
 
