@@ -22,7 +22,7 @@ Commands are actions that the robot can perform. They are organized into differe
 #### [ResetHeadingCmd.java](https://github.com/levifitzpatrick1/robitcode/blob/main/plz/src/main/java/frc/robot/Commands/DriveCommands/ResetHeadingCmd.java)
 
 -   **Purpose**: Resets the robot's heading to a default value.
--   **Usage**: Typically used when the robot needs to align itself to a specific direction.
+-   **Usage**: Typically used when the robot's zero heading has drifted, or the robot did not start at the 0 position.
 
 #### [ResetOdometry.java](https://github.com/levifitzpatrick1/robitcode/blob/main/plz/src/main/java/frc/robot/Commands/DriveCommands/ResetOdometry.java)
 
