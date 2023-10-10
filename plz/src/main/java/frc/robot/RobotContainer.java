@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Commands.DriveCommands.GetAccelerationCmd;
 import frc.robot.Commands.DriveCommands.ResetHeadingCmd;
 import frc.robot.Commands.DriveCommands.SwerveJoystickCmd;
 import frc.robot.Commands.VisionCommands.TrackTargetIDPosCmd;
@@ -41,6 +42,9 @@ public class RobotContainer implements Loggable {
     new JoystickButton(driverController, OIConstants.kXboxXButton)
         .whileTrue(new TrackTargetIDPosCmd(drivetrain, 99));
 
+    new JoystickButton(driverController, OIConstants.kXboxLeftBumper)
+        .whileTrue(new GetAccelerationCmd(drivetrain));
+  
   }
 
   public Command getAutonomousCommand() {

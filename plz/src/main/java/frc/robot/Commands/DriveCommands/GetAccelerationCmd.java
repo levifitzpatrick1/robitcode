@@ -1,7 +1,6 @@
 package frc.robot.Commands.DriveCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.Constants.DriveConstants;
 import frc.robot.Subsystems.Drivetrain;
 
 public class GetAccelerationCmd extends CommandBase {
@@ -19,6 +18,6 @@ public class GetAccelerationCmd extends CommandBase {
 
     @Override
     public void execute() {
-        
+        drivetrain.getAcceleration();
     }
 }
