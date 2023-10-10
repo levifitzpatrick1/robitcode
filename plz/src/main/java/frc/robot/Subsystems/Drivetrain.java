@@ -200,6 +200,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /**
      * Updates the robot's position on the field using the encoders gyro and vision
+     * only update with vision if the reading is within 1 meter of the current estimate
      */
     public void updateOdometry() {
         positionEstimator.update(getRotation2d(), getModulePositions());
@@ -208,7 +209,12 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
         if (result.isPresent()) {
             EstimatedRobotPose camPose = result.get();
-            positionEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+            Pose2d currEstimate = positionEstimator.getEstimatedPosition();
+            double distance = currEstimate.getTranslation().getDistance(camPose.estimatedPose.toPose2d().getTranslation());
+            if (distance <= 1.0){
+                positionEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+            }
+            
         }
     }
 
@@ -343,12 +349,42 @@ public class Drivetrain extends SubsystemBase implements Loggable {
                 vx, vy, rotspeed, getRotation2d());
 
             SwerveModuleState[] states = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+            SwerveDriveKinematics.desaturateWheelSpeeds(states, DriveConstants.kDriveMaxVelocity);
             setModuleStates(states);
 
             return speeds;
         } else {
             return new ChassisSpeeds(0, 0, 0);
         }
+    }
+
+    /**
+     * Drives to a given position
+     * @param targetPose Pose to drive to
+     * @return Chassis speeds to drive to the pose
+     */
+    public ChassisSpeeds driveToPosition2D(Pose2d targetPose){
+
+        Pose2d currentPose = positionEstimator.getEstimatedPosition();
+
+        double xError = targetPose.getTranslation().getX() - currentPose.getTranslation().getX();
+        double yError = targetPose.getTranslation().getY() - currentPose.getTranslation().getY();
+        double rotError = targetPose.getRotation().getRadians() - currentPose.getRotation().getRadians();
+
+        double vx = xtranslationPID.calculate(xError, 0) * DriveConstants.kDriveMaxVelocity;
+        double vy = ytranslationPID.calculate(yError, 0) * DriveConstants.kDriveMaxVelocity;
+        double rot = angularPID.calculate(rotError, 0) * DriveConstants.kTurnMaxVelocity;
+
+        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+            vx, vy, rot, getRotation2d());
+
+        SwerveModuleState[] states = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(states, DriveConstants.kDriveMaxVelocity);
+        setModuleStates(states);
+
+        return speeds;
+
+
     }
 
 }
