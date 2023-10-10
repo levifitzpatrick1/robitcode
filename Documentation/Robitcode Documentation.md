@@ -1,6 +1,6 @@
 ## Table of Contents
 
--   Introduction
+-   [Introduction](#Introduction)
 -   Commands
     -   Drive Commands
     -   Vision Commands
