@@ -5,7 +5,7 @@
     -   [Drive Commands](#Drive-Commands)
     -   [Vision Commands](#Vision-Commands)
 -   [Constants](#Constants)
--   [Main Files](#MainFiles)
+-   [Main Files](#Main-Files)
 -   [Subsystems](#Subsystems)
 -  [Additional Information](#Additional-Information)
 
