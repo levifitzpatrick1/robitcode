@@ -8,8 +8,8 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -43,8 +43,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     private Pigeon2 gyro = new Pigeon2(62);
     private AHRS navx = new AHRS(SPI.Port.kMXP);
 
-    private double desiredHeading = 0;
-
     public PIDController angularPID = 
         new PIDController(
         DriveConstants.kVisionRotationP,
@@ -52,18 +50,20 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         DriveConstants.kVisionRotationD
         );
 
-    public PIDController xtranslationPID = 
-        new PIDController(
+    public ProfiledPIDController xtranslationPID = 
+        new ProfiledPIDController(
         DriveConstants.kVisionTranslationxP,
         DriveConstants.kVisionTranslationxI,
-        DriveConstants.kVisionTranslationxD
+        DriveConstants.kVisionTranslationxD,
+        DriveConstants.kDriveConstraints
         );
 
-    public PIDController ytranslationPID = 
-        new PIDController(
+    public ProfiledPIDController ytranslationPID = 
+        new ProfiledPIDController(
         DriveConstants.kVisionTranslationyP,
         DriveConstants.kVisionTranslationyI,
-        DriveConstants.kVisionTranslationyD
+        DriveConstants.kVisionTranslationyD,
+        DriveConstants.kDriveConstraints
         );
 
     public PhotonCameraWrapper FrontCam;
@@ -98,26 +98,21 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         SmartDashboard.putNumber("BL Cancoder", backLeftModule.getAbsolutePositionDegrees());
         SmartDashboard.putNumber("BR Cancoder", backRightModule.getAbsolutePositionDegrees());
 
-        positionEstimator.update(getRotation2d(), getModulePositions());
+        updateOdometry();
 
         angularPID.setP(DriveConstants.kVisionRotationP);
         angularPID.setI(DriveConstants.kVisionRotationI);
         angularPID.setD(DriveConstants.kVisionRotationD);
 
 
-        xtranslationPID = 
-        new PIDController(
-        DriveConstants.kVisionTranslationxP,
-        DriveConstants.kVisionTranslationxI,
-        DriveConstants.kVisionTranslationxD
-        );
+        xtranslationPID.setP(DriveConstants.kVisionTranslationxP);
+        xtranslationPID.setI(DriveConstants.kVisionTranslationxI);
+        xtranslationPID.setD(DriveConstants.kVisionTranslationxD);
 
-        ytranslationPID =
-        new PIDController(
-        DriveConstants.kVisionTranslationyP,
-        DriveConstants.kVisionTranslationyI,
-        DriveConstants.kVisionTranslationyD
-        );
+
+        ytranslationPID.setP(DriveConstants.kVisionTranslationyP);
+        ytranslationPID.setI(DriveConstants.kVisionTranslationyI);
+        ytranslationPID.setD(DriveConstants.kVisionTranslationyD);
     }
     
 
@@ -191,7 +186,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     public Rotation2d getRotation2d() {
         return Rotation2d.fromDegrees(getHeading());
     }
-
 
     // ------ Odometry ------ //
 
@@ -300,11 +294,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
             rotspeed = angularPID.calculate(yaw, 0);
             
             SmartDashboard.putNumber("speed", rotspeed);
-        //     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-        //         0, 0, rotspeed, getRotation2d());
-
-        //    SwerveModuleState[] states = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
-        //    setModuleStates(states);
+            
         } else {
             rotspeed = 0;
         }
@@ -331,7 +321,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         if (result.hasTargets() && (result.getBestTarget().getFiducialId() == targetID || targetID == 99)){
             cameraToTarget = result.getBestTarget().getBestCameraToTarget();
 
-
             x = cameraToTarget.getX();
             y = cameraToTarget.getY();
 
@@ -347,8 +336,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
                 angularSetpoint = -180;
             }
 
-            vx = xtranslationPID.calculate(-x, 1);
-            vy = ytranslationPID.calculate(Math.toDegrees(rot), angularSetpoint);
+            vx = xtranslationPID.calculate(-x, 1) * DriveConstants.kDriveMaxVelocity;
+            vy = ytranslationPID.calculate(Math.toDegrees(rot), angularSetpoint) * DriveConstants.kDriveMaxVelocity;
 
             ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                 vx, vy, rotspeed, getRotation2d());
