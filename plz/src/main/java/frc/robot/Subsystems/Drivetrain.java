@@ -2,8 +2,6 @@ package frc.robot.Subsystems;
 
 import java.util.Optional;
 
-import javax.swing.event.DocumentEvent;
-
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.targeting.PhotonPipelineResult;
 
@@ -109,19 +107,19 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
         updateOdometry();
 
-        angularPID.setP(DriveConstants.kVisionRotationP);
-        angularPID.setI(DriveConstants.kVisionRotationI);
-        angularPID.setD(DriveConstants.kVisionRotationD);
+        // angularPID.setP(DriveConstants.kVisionRotationP);
+        // angularPID.setI(DriveConstants.kVisionRotationI);
+        // angularPID.setD(DriveConstants.kVisionRotationD);
 
 
-        xtranslationPID.setP(DriveConstants.kVisionTranslationxP);
-        xtranslationPID.setI(DriveConstants.kVisionTranslationxI);
-        xtranslationPID.setD(DriveConstants.kVisionTranslationxD);
+        // xtranslationPID.setP(DriveConstants.kVisionTranslationxP);
+        // xtranslationPID.setI(DriveConstants.kVisionTranslationxI);
+        // xtranslationPID.setD(DriveConstants.kVisionTranslationxD);
 
 
-        ytranslationPID.setP(DriveConstants.kVisionTranslationyP);
-        ytranslationPID.setI(DriveConstants.kVisionTranslationyI);
-        ytranslationPID.setD(DriveConstants.kVisionTranslationyD);
+        // ytranslationPID.setP(DriveConstants.kVisionTranslationyP);
+        // ytranslationPID.setI(DriveConstants.kVisionTranslationyI);
+        // ytranslationPID.setD(DriveConstants.kVisionTranslationyD);
     }
     
 
