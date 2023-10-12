@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.ModuleConstants.ModuleSpecificConstants;
+import frc.robot.Util.LowPassFilter;
 
 public class SwerveModule {
 
@@ -30,6 +31,8 @@ public class SwerveModule {
     private final boolean absoluteEnCoderReversed;
 
     private final ModuleSpecificConstants constants;
+
+    private final LowPassFilter driveLowPassFilter;
 
 
     /**
@@ -68,6 +71,8 @@ public class SwerveModule {
 
         turningProfiledPIDController.setTolerance(ModuleConstants.kTurningTolerance);
         turningProfiledPIDController.enableContinuousInput(-Math.PI, Math.PI);
+
+        driveLowPassFilter = new LowPassFilter(0.2);
 
         resetEncoders();
     }
@@ -164,7 +169,10 @@ public class SwerveModule {
 
         state = SwerveModuleState.optimize(state, getState().angle);
         //driveMotor.set(state.speedMetersPerSecond / constants.kMaxModuleSpeed);
-        driveMotor.set(drivePIDController.calculate(getDriveVelocity(), state.speedMetersPerSecond));
+
+        double filteredVelocity = driveLowPassFilter.filter(getDriveVelocity());
+
+        driveMotor.set(drivePIDController.calculate(filteredVelocity, state.speedMetersPerSecond));
         turnMotor.set(turningProfiledPIDController.calculate(getTurnPosition(), state.angle.getRadians()));
     }
 
