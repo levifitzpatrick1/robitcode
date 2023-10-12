@@ -14,7 +14,7 @@ public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter
 public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60.0;
 
 
-public static final double kPTurning = .6;
+public static final double kPTurning = 1;
 public static final double kITurning = 0;
 public static final double kDTurning = 0;
 public static final double kTurningTolerance = 0.1;

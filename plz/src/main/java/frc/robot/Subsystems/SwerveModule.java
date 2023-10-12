@@ -23,7 +23,7 @@ public class SwerveModule {
     private final RelativeEncoder turnEncoder;
 
     private final ProfiledPIDController turningProfiledPIDController;
-    //private final PIDController drivePIDController;
+    private final PIDController drivePIDController;
 
     private final CANcoder absoluteEnCoder;
     private final double absoluteEnCoderOffset;
@@ -64,7 +64,7 @@ public class SwerveModule {
         turnEncoder.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
 
         turningProfiledPIDController = new ProfiledPIDController(ModuleConstants.kPTurning, ModuleConstants.kITurning, ModuleConstants.kDTurning, ModuleConstants.kTurningConstraints);
-        //drivePIDController = new PIDController(ModuleConstants.kPDrive, ModuleConstants.kIDrive, ModuleConstants.kDDrive);
+        drivePIDController = new PIDController(ModuleConstants.kPDrive, ModuleConstants.kIDrive, ModuleConstants.kDDrive);
 
         turningProfiledPIDController.setTolerance(ModuleConstants.kTurningTolerance);
         turningProfiledPIDController.enableContinuousInput(-Math.PI, Math.PI);
@@ -163,8 +163,8 @@ public class SwerveModule {
         }
 
         state = SwerveModuleState.optimize(state, getState().angle);
-        driveMotor.set(state.speedMetersPerSecond / constants.kMaxModuleSpeed);
-        //driveMotor.set(drivePIDController.calculate(getDriveVelocity(), state.speedMetersPerSecond));
+        //driveMotor.set(state.speedMetersPerSecond / constants.kMaxModuleSpeed);
+        driveMotor.set(drivePIDController.calculate(getDriveVelocity(), state.speedMetersPerSecond));
         turnMotor.set(turningProfiledPIDController.calculate(getTurnPosition(), state.angle.getRadians()));
     }
 
