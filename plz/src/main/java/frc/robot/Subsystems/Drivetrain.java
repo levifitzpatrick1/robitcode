@@ -1,5 +1,6 @@
 package frc.robot.Subsystems;
 
+import java.lang.StackWalker.Option;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
@@ -8,6 +9,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -22,9 +24,11 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.Constants.DriveConstants;
 import frc.robot.Constants.Constants.VisionConstants;
+import frc.robot.Util.LowPassFilter;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
@@ -73,6 +77,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         DriveConstants.kDriveConstraints
         );
 
+    private final LowPassFilter visionFilter = new LowPassFilter(0.2);
+
     public PhotonCameraWrapper FrontCam;
 
     private final SwerveDrivePoseEstimator positionEstimator = 
@@ -94,16 +100,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
         zeroHeading();
         FrontCam = new PhotonCameraWrapper(VisionConstants.kFrontCamName, VisionConstants.kFrontRobotToCam);
+
+        
     }
 
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Robot Heading", getHeading());
-        SmartDashboard.putNumber("FL Cancoder", frontLeftModule.getAbsolutePositionDegrees());
-        SmartDashboard.putNumber("FR Cancoder", frontRightModule.getAbsolutePositionDegrees());
-        SmartDashboard.putNumber("BL Cancoder", backLeftModule.getAbsolutePositionDegrees());
-        SmartDashboard.putNumber("BR Cancoder", backRightModule.getAbsolutePositionDegrees());
+
+        SmartDashboard.putNumber("x pos", positionEstimator.getEstimatedPosition().getX());
+        SmartDashboard.putNumber("y pos", positionEstimator.getEstimatedPosition().getY());
 
         updateOdometry();
 
@@ -206,6 +212,22 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
 
     /**
+     * If the robot can see an april tag, set the odometry based off of that
+     * <p> This should be run on the start of autonomous so we know where we are on the field to start, no matter our position
+     */
+    public void odometryToVision(){
+
+
+        Optional<EstimatedRobotPose> result = FrontCam.getEstimatedGlobalPose(positionEstimator.getEstimatedPosition());
+
+        if (result.isPresent()){
+        EstimatedRobotPose camPose = result.get();
+
+        positionEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+        }
+    }
+
+    /**
      * Updates the robot's position on the field using the encoders gyro and vision
      * only update with vision if the reading is within 1 meter of the current estimate
      */
@@ -301,6 +323,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         if (result.hasTargets() && (result.getBestTarget().getFiducialId() == targetID || targetID == 99)) {
             int foundTargetID = result.getBestTarget().getFiducialId();
             double yaw = Math.toRadians(result.getBestTarget().getYaw());
+            yaw = visionFilter.filter(yaw);
             SmartDashboard.putNumber("vision target id", foundTargetID);
             SmartDashboard.putNumber("vision target yaw", yaw);
 

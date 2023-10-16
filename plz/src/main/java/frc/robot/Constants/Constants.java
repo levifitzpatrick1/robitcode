@@ -54,9 +54,9 @@ public class Constants implements Loggable {
                 new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
                 new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
-        public static double kVisionRotationP = 5.0;
-        public static double kVisionRotationI = 0.0;
-        public static double kVisionRotationD = 2.0;
+        public static double kVisionRotationP = 1.5;
+        public static double kVisionRotationI = 0.2;
+        public static double kVisionRotationD = 0.075;
 
         public static final double kTurnMaxVelocity = 9.33;
         public static final double kTurnMaxAcceleration = 773.44;

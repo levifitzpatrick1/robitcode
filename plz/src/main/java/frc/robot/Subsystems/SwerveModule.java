@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.ModuleConstants.ModuleSpecificConstants;
 import frc.robot.Util.LowPassFilter;
@@ -33,6 +34,7 @@ public class SwerveModule {
     private final ModuleSpecificConstants constants;
 
     private final LowPassFilter driveLowPassFilter;
+    private final LowPassFilter turnLowPassFilter;
 
 
     /**
@@ -73,6 +75,7 @@ public class SwerveModule {
         turningProfiledPIDController.enableContinuousInput(-Math.PI, Math.PI);
 
         driveLowPassFilter = new LowPassFilter(0.2);
+        turnLowPassFilter = new LowPassFilter(0.1);
 
         resetEncoders();
     }
@@ -168,12 +171,16 @@ public class SwerveModule {
         }
 
         state = SwerveModuleState.optimize(state, getState().angle);
-        //driveMotor.set(state.speedMetersPerSecond / constants.kMaxModuleSpeed);
+        driveMotor.set(state.speedMetersPerSecond / constants.kMaxModuleSpeed);
 
-        double filteredVelocity = driveLowPassFilter.filter(getDriveVelocity());
 
-        driveMotor.set(drivePIDController.calculate(filteredVelocity, state.speedMetersPerSecond));
+
+        //driveMotor.set(drivePIDController.calculate(getDriveVelocity(), state.speedMetersPerSecond));
         turnMotor.set(turningProfiledPIDController.calculate(getTurnPosition(), state.angle.getRadians()));
+    
+        SmartDashboard.putNumber("Current Speed", getDriveVelocity());
+        SmartDashboard.putNumber("Desired speed", state.speedMetersPerSecond);
+        SmartDashboard.putNumber("Drive motor set", driveMotor.get());
     }
 
     public void stop() {

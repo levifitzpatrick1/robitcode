@@ -16,13 +16,13 @@ public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad
 
 public static final double kPTurning = 1;
 public static final double kITurning = 0;
-public static final double kDTurning = 0;
+public static final double kDTurning = .01;
 public static final double kTurningTolerance = 0.1;
 public static final double kTurningMaxVelocity = 5676 * 60 * kTurningEncoderRot2Rad;
 public static final double kTurningMaxAcceleration = kTurningMaxVelocity / 60;
 public static final Constraints kTurningConstraints = new Constraints(kTurningMaxVelocity, kTurningMaxAcceleration);
 
-public static final double kPDrive = .5;
+public static final double kPDrive = 1;
 public static final double kIDrive = 0;
 public static final double kDDrive = 0;
 
