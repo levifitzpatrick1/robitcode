@@ -5,7 +5,6 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -25,17 +24,11 @@ public class SwerveModule {
     private final RelativeEncoder turnEncoder;
 
     private final ProfiledPIDController turningProfiledPIDController;
-    private final PIDController drivePIDController;
-
     private final CANcoder absoluteEnCoder;
     private final double absoluteEnCoderOffset;
     private final boolean absoluteEnCoderReversed;
 
     private final ModuleSpecificConstants constants;
-
-    private final LowPassFilter driveLowPassFilter;
-    private final LowPassFilter turnLowPassFilter;
-
 
     /**
      * Creates a new SwerveModule with the given moduleID and moduleLocation
@@ -69,13 +62,12 @@ public class SwerveModule {
         turnEncoder.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
 
         turningProfiledPIDController = new ProfiledPIDController(ModuleConstants.kPTurning, ModuleConstants.kITurning, ModuleConstants.kDTurning, ModuleConstants.kTurningConstraints);
-        drivePIDController = new PIDController(ModuleConstants.kPDrive, ModuleConstants.kIDrive, ModuleConstants.kDDrive);
 
         turningProfiledPIDController.setTolerance(ModuleConstants.kTurningTolerance);
         turningProfiledPIDController.enableContinuousInput(-Math.PI, Math.PI);
 
-        driveLowPassFilter = new LowPassFilter(0.2);
-        turnLowPassFilter = new LowPassFilter(0.1);
+        new LowPassFilter(0.2);
+        new LowPassFilter(0.1);
 
         resetEncoders();
     }
@@ -172,10 +164,6 @@ public class SwerveModule {
 
         state = SwerveModuleState.optimize(state, getState().angle);
         driveMotor.set(state.speedMetersPerSecond / constants.kMaxModuleSpeed);
-
-
-
-        //driveMotor.set(drivePIDController.calculate(getDriveVelocity(), state.speedMetersPerSecond));
         turnMotor.set(turningProfiledPIDController.calculate(getTurnPosition(), state.angle.getRadians()));
     
         SmartDashboard.putNumber("Current Speed", getDriveVelocity());

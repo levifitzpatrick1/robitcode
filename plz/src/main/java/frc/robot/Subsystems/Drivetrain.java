@@ -1,6 +1,5 @@
 package frc.robot.Subsystems;
 
-import java.lang.StackWalker.Option;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
@@ -9,7 +8,6 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -24,7 +22,6 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.Constants.DriveConstants;
 import frc.robot.Constants.Constants.VisionConstants;
@@ -347,7 +344,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         PhotonPipelineResult result = FrontCam.photonCamera.getLatestResult();
         double rotspeed;
         double x;
-        double y;
         double rot;
         double vx;
         double vy;
@@ -358,8 +354,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
             cameraToTarget = result.getBestTarget().getBestCameraToTarget();
 
             x = cameraToTarget.getX();
-            y = cameraToTarget.getY();
-
             rot = cameraToTarget.getRotation().getZ();
 
             rotspeed = angularPID.calculate(result.getBestTarget().getYaw(), 0);

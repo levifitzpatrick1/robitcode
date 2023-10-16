@@ -1,8 +1,5 @@
 package frc.robot.Constants;
 
-import java.util.List;
-import java.util.Map;
-
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
