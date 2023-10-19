@@ -110,19 +110,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
         updateOdometry();
 
-        // angularPID.setP(DriveConstants.kVisionRotationP);
-        // angularPID.setI(DriveConstants.kVisionRotationI);
-        // angularPID.setD(DriveConstants.kVisionRotationD);
-
-
-        // xtranslationPID.setP(DriveConstants.kVisionTranslationxP);
-        // xtranslationPID.setI(DriveConstants.kVisionTranslationxI);
-        // xtranslationPID.setD(DriveConstants.kVisionTranslationxD);
-
-
-        // ytranslationPID.setP(DriveConstants.kVisionTranslationyP);
-        // ytranslationPID.setI(DriveConstants.kVisionTranslationyI);
-        // ytranslationPID.setD(DriveConstants.kVisionTranslationyD);
     }
     
 
