@@ -9,7 +9,6 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.ModuleConstants.ModuleSpecificConstants;
 import frc.robot.Util.LowPassFilter;
@@ -165,10 +164,6 @@ public class SwerveModule {
         state = SwerveModuleState.optimize(state, getState().angle);
         driveMotor.set(state.speedMetersPerSecond / constants.kMaxModuleSpeed);
         turnMotor.set(turningProfiledPIDController.calculate(getTurnPosition(), state.angle.getRadians()));
-    
-        SmartDashboard.putNumber("Current Speed", getDriveVelocity());
-        SmartDashboard.putNumber("Desired speed", state.speedMetersPerSecond);
-        SmartDashboard.putNumber("Drive motor set", driveMotor.get());
     }
 
     public void stop() {

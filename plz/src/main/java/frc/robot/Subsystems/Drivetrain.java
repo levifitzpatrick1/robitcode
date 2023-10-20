@@ -318,16 +318,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         double rotspeed;
 
         if (result.hasTargets() && (result.getBestTarget().getFiducialId() == targetID || targetID == 99)) {
-            int foundTargetID = result.getBestTarget().getFiducialId();
             double yaw = Math.toRadians(result.getBestTarget().getYaw());
             yaw = visionFilter.filter(yaw);
-            SmartDashboard.putNumber("vision target id", foundTargetID);
-            SmartDashboard.putNumber("vision target yaw", yaw);
-
             rotspeed = angularPID.calculate(yaw, 0);
-            
-            SmartDashboard.putNumber("speed", rotspeed);
-            
         } else {
             rotspeed = 0;
         }
@@ -433,9 +426,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
             double deltaTime = finalTime - initTime;
             double acceleration = ModuleConstants.kDriveMaxVelocity / deltaTime;
 
-            SmartDashboard.putNumber("Acceleration",  acceleration);
+            SmartDashboard.putNumber("Acceleration", acceleration);
 
-            // Reset timing flag
             isTiming = false;
         }
     }
