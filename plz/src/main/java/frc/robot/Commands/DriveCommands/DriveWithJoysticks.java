@@ -63,6 +63,8 @@ public class DriveWithJoysticks extends CommandBase {
             linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
             rightY * drive.getMaxAngularSpeedRadiansPerSec());
 
+        speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds.vxMetersPerSecond,
+        speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, drive.getRotation());
 
         drive.runVelocity(speeds);
     }

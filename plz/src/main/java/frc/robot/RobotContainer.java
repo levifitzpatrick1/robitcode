@@ -50,6 +50,8 @@ public class RobotContainer {
       }
     }
 
+    driverController = new XboxController(Constants.OIConstants.kDriverControllerPort);
+
     drive = drive != null ? drive :
       new DriveWithIO(
         new IOGyro() {},
