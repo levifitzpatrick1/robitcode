@@ -1,5 +1,7 @@
 package frc.robot.Constants;
 
+import java.util.Map;
+
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -7,8 +9,46 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.Util.Alert;
+import frc.robot.Util.Alert.AlertType;
 
 public class Constants{
+
+    // Logging Stuff
+    private static final RobotType robot = RobotType.ROBOT_PHYSICAL;
+    public static final double loopPeriod = 0.02;
+    public static final boolean tuningMode = false;
+
+    private static final Alert invalidRobotAlert = 
+        new Alert("Invalid Robot", "The robot type is invalid. Please check the robot type in Constants.java", AlertType.ERROR);
+
+    
+  public static RobotType getRobot() {
+    if (RobotBase.isReal()) {
+      if (robot == RobotType.ROBOT_SIMBOT) { // Invalid robot selected
+        invalidRobotAlert.set(true);
+        return RobotType.ROBOT_PHYSICAL;
+      } else {
+        return robot;
+      }
+    } else {
+      return robot;
+    }
+  }
+
+  public static Mode getMode() {
+    switch (getRobot()) {
+      case ROBOT_PHYSICAL:
+        return RobotBase.isReal() ? Mode.REAL : Mode.REPLAY;
+
+      case ROBOT_SIMBOT:
+        return Mode.SIM;
+
+      default:
+        return Mode.REAL;
+    }
+  }
 
     public static class OIConstants {
         public static final int kDriverControllerPort = 0;
@@ -82,5 +122,20 @@ public class Constants{
 
         public static final String kFrontCamName = "Cam1";
     }
+
+
+
+
+// Robot Type Info
+    public static final Map<RobotType, String> logFolders =
+    Map.of(RobotType.ROBOT_PHYSICAL, "/media/sda2");
+
+public static enum RobotType {
+  ROBOT_PHYSICAL, ROBOT_SIMBOT
+}
+
+public static enum Mode {
+  REAL, REPLAY, SIM
+}
 
 }

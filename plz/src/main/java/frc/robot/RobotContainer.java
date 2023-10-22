@@ -4,50 +4,76 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Commands.DriveCommands.GetAccelerationCmd;
-import frc.robot.Commands.DriveCommands.ResetHeadingCmd;
-import frc.robot.Commands.DriveCommands.SwerveJoystickCmd;
-import frc.robot.Commands.VisionCommands.TrackTargetIDPosCmd;
-import frc.robot.Constants.Constants.OIConstants;
-import frc.robot.Subsystems.Drivetrain;
-import io.github.oblarg.oblog.Loggable;
+import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.Commands.DriveCommands.DriveWithJoysticks;
+import frc.robot.Constants.Constants;
+import frc.robot.Constants.Constants.Mode;
+import frc.robot.Subsystems.Drive.DriveWithIO;
+import frc.robot.Subsystems.Drive.IOGyro;
+import frc.robot.Subsystems.Drive.IOModuleSim;
+import frc.robot.Subsystems.Drive.IOModuleSparkMAX;
+import frc.robot.Subsystems.Drive.IOPigeon2;
+import frc.robot.Util.Alert;
 
-public class RobotContainer implements Loggable {
 
-  final Drivetrain drivetrain = new Drivetrain();
+public class RobotContainer {
+  private DriveWithIO drive;
 
-  private final Joystick driverController = new Joystick(OIConstants.kDriverControllerPort);
+  private XboxController driverController;
+
+  private boolean isFieldCentric = true;
 
   public RobotContainer() {
 
-    drivetrain.setDefaultCommand(new SwerveJoystickCmd(
-        drivetrain,
-        () -> driverController.getRawAxis(OIConstants.kXboxLeftXAxis),
-        () -> driverController.getRawAxis(OIConstants.kXboxLeftYAxis),
-        () -> driverController.getRawAxis(OIConstants.kXboxRightXAxis),
-        () -> driverController.getRawButton(OIConstants.kXboxAButton),
-        () -> driverController.getRawButton(OIConstants.kXboxYButton)));
+    if (Constants.getMode() != Mode.REPLAY) {
+      switch (Constants.getRobot()) {
+        case ROBOT_PHYSICAL:
+        drive = new DriveWithIO(
+          new IOPigeon2(),
+          new IOModuleSparkMAX(3, "FL"),
+          new IOModuleSparkMAX(4, "FR"),
+          new IOModuleSparkMAX(2, "BL"),
+          new IOModuleSparkMAX(1, "BR"));
+          break;
+      case ROBOT_SIMBOT:
+        drive = new DriveWithIO(
+          new IOGyro() {},
+          new IOModuleSim(),
+          new IOModuleSim(),
+          new IOModuleSim(),
+          new IOModuleSim());
+        break;
 
-    configureBindings();
+      default:
+        break;
+
+      }
+    }
+
+    drive = drive != null ? drive :
+      new DriveWithIO(
+        new IOGyro() {},
+        new IOModuleSim(),
+        new IOModuleSim(),
+        new IOModuleSim(),
+        new IOModuleSim());
+
+
+    if (Constants.tuningMode) {
+      new Alert("Tuning Mode Enabled", Alert.AlertType.INFO).set(true);
+    }
+
+    configureButtonBindings();
+
   }
 
-  private void configureBindings() {
-    new JoystickButton(driverController, OIConstants.kXboxBButton)
-        .onTrue(new ResetHeadingCmd(drivetrain));
-
-    new JoystickButton(driverController, OIConstants.kXboxXButton)
-        .whileTrue(new TrackTargetIDPosCmd(drivetrain, 99));
-
-    new JoystickButton(driverController, OIConstants.kXboxLeftBumper)
-        .whileTrue(new GetAccelerationCmd(drivetrain));
-  
+  private void configureButtonBindings() {
+    drive.setDefaultCommand(new DriveWithJoysticks(drive,
+    () -> -driverController.getLeftY(),
+    () -> -driverController.getLeftX(),
+    () -> -driverController.getRightX(),
+    () -> !isFieldCentric 
+    ));
   }
 
-  public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
-  }
 }

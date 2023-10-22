@@ -8,7 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.Constants.DriveConstants;
 import frc.robot.Constants.Constants.OIConstants;
-import frc.robot.Subsystems.Drivetrain;
+import frc.robot.Subsystems.Drive.Drivetrain;
 
 public class SwerveJoystickCmd extends CommandBase {
     private final Drivetrain drivetrain;

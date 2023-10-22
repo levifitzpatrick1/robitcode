@@ -2,7 +2,7 @@ package frc.robot.Commands.VisionCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Subsystems.Drivetrain;
+import frc.robot.Subsystems.Drive.Drivetrain;
 
 public class Move1MeterFromIdCmd extends CommandBase {
 
