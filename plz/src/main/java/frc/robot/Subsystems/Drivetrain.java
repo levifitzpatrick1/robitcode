@@ -217,7 +217,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
      */
     public void updateOdometry() {
         positionEstimator.update(getRotation2d(), getModulePositions());
-
+        
         Optional<EstimatedRobotPose> result = FrontCam.getEstimatedGlobalPose(positionEstimator.getEstimatedPosition());
 
         if (result.isPresent()) {
