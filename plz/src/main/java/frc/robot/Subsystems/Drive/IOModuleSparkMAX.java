@@ -1,7 +1,5 @@
 package frc.robot.Subsystems.Drive;
 
-import javax.management.RuntimeErrorException;
-
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -9,10 +7,20 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants.Constants;
-import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.ModuleConstants.ModuleSpecificConstants;
 import frc.robot.Util.SparkMaxDerivedVelocityController;
 
+
+/**
+ * IOModuleSparkMAX is an implementation of the IOModule interface,
+ * specifically designed for SparkMax-based swerve modules.
+ *
+ * <p>This class handles the low-level control and data acquisition
+ * for both the drive and turn motors of a swerve module.</p>
+ *
+ * <p>It also includes specific configurations and constants for
+ * different robots and module locations.</p>
+ */
 public class IOModuleSparkMAX implements IOModule{
     private final CANSparkMax driveMotor;
     private final CANSparkMax turnMotor;
@@ -33,6 +41,13 @@ public class IOModuleSparkMAX implements IOModule{
 
     private final ModuleSpecificConstants constants;
 
+
+    /**
+     * Constructor for initializing the IOModuleSparkMAX.
+     *
+     * @param moduleID The ID of the swerve module.
+     * @param moduleLocation The location of the swerve module on the robot.
+     */
     public IOModuleSparkMAX(int moduleID, String moduleLocation){
         switch (Constants.getRobot()) {
             case ROBOT_PHYSICAL:
@@ -76,6 +91,11 @@ public class IOModuleSparkMAX implements IOModule{
         
     }
 
+        /**
+     * Updates the set of loggable inputs for the swerve module.
+     *
+     * @param inputs An instance of IOModuleInputs containing the latest sensor data.
+     */
     @Override
     public void updateInputs(IOModuleInputs inputs){
         inputs.drivePositionRad =
@@ -109,10 +129,21 @@ public class IOModuleSparkMAX implements IOModule{
         inputs.turnTempC = new double[] {turnMotor.getMotorTemperature()};
     }
 
+    /**
+     * Sets the voltage for the drive motor. This is used for open-loop control.
+     *
+     * @param voltage The voltage to apply to the drive motor.
+     */
     public void setDriveVoltage(double voltage){
         driveMotor.setVoltage(voltage);
     }
 
+
+    /**
+     * Sets the voltage for the turn motor. This is used for open-loop control.
+     *
+     * @param voltage The voltage to apply to the turn motor.
+     */
     public void setTurnVoltage(double voltage){
         turnMotor.setVoltage(voltage);
     }

@@ -3,7 +3,6 @@ package frc.robot.Util;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import com.ctre.phoenix6.sim.DeviceType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
@@ -14,6 +13,27 @@ import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 
+/**
+ * Alternative system for reading and using the velocity measurements from the internal encoder on a
+ * Spark Max. By default, the filtering of the velocity data produces a 112ms latency, making it
+ * significantly more difficult to use feedback control for velocity. This class instead uses
+ * position measurements (which have no filtering) to derive the velocity on the RIO and run the
+ * control loop using a notifier thread. The period of the control loop and the number of averaging
+ * taps are configurable. Note the following warnings:
+ * 
+ * <p>
+ * Reading the internal encoder position from REVLib will be nonfunctional. All other functions are
+ * unaffected.
+ * 
+ * <p>
+ * The position conversion factor on the Spark Max will be automatically reset to 1 when
+ * initialized. We recommend running unit conversions on the RIO instead ({@link #getPosition()}
+ * returns rotations and {@link #getVelocity()} returns rotations/minute).
+ * 
+ * <p>
+ * The units for the PID gains do not match the native units of the Spark Max. Expect to retune
+ * these gains when switching to this class.
+ */
 public class SparkMaxDerivedVelocityController {
     private final int deviceManufacturer = 5;
     private final int deviceID = 2;
@@ -32,10 +52,15 @@ public class SparkMaxDerivedVelocityController {
     private double position = 0.0;
     private double velocity = 0.0;
 
+
+      /**
+   * Creates a new SparkMaxDerivedVelocityController using a default set of parameters.
+   */
     public SparkMaxDerivedVelocityController(CANSparkMax sparkMax){
         this(sparkMax, 0.02, 5);
     }
 
+  /** Creates a new SparkMaxDerivedVelocityController. */
     public SparkMaxDerivedVelocityController(CANSparkMax sparkMax, double periodSeconds, int averageTaps){
         this.sparkMax = sparkMax;
         sparkMax.getEncoder().setPositionConversionFactor(1.0);
@@ -50,6 +75,9 @@ public class SparkMaxDerivedVelocityController {
         notifier.startPeriodic(periodSeconds);
     }
 
+    /**
+    * Reads new data, updates the velocity measurement, and runs the controller.
+    */
     private void update(){
         CANData canData = new CANData();
         boolean isFresh = canInterface.readPacketNew(apiID, canData);
@@ -77,6 +105,11 @@ public class SparkMaxDerivedVelocityController {
         }
     }
 
+    /**
+   * Sets the desired velocity and enables the controller. Note that the controller will continue to
+   * run until {@link #disable()} is called or the robot is disabled, even if another command is
+   * sent to the Spark Max.
+   */
     public synchronized void setReference(double velocityRpm, double ffVolts){
         velocityController.setSetpoint(velocityRpm);
         this.ffVolts = ffVolts;
@@ -86,6 +119,11 @@ public class SparkMaxDerivedVelocityController {
         enabled = true;
     }
 
+
+    /**
+   * Disables the controller. No further commands will be sent to the Spark Max, but the
+   * measurements will continue to update.
+   */
     public synchronized void disable() {
         if (enabled){
             sparkMax.stopMotor();
@@ -93,14 +131,21 @@ public class SparkMaxDerivedVelocityController {
         enabled = false;
     }
 
+      /** Sets the PID gains. */
     public synchronized void setPID(double kP, double kI, double kD){
         velocityController.setPID(kP, kI, kD);
     }
 
+    /**
+   * Returns the current position in rotations.
+   */
     public synchronized double getPosition(){
         return position;
     }
 
+    /**
+   * Returns the current velocity in rotations/minute.
+   */
     public synchronized double getVelocity(){
         return velocity;
     }
