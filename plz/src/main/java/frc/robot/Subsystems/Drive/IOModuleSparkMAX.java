@@ -33,8 +33,6 @@ public class IOModuleSparkMAX implements IOModule{
     private final SparkMaxDerivedVelocityController driveDerivedVelocityController;
     private final SparkMaxDerivedVelocityController turnDerivedVelocityController;
     private final RelativeEncoder driveEncoder;
-    private final RelativeEncoder turnEncoder;
-
     private final CANcoder absoluteEnCoder;
     private final double absoluteEnCoderOffset;
     private final boolean absoluteEnCoderReversed;
@@ -64,7 +62,7 @@ public class IOModuleSparkMAX implements IOModule{
             driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
     
             driveEncoder = driveMotor.getEncoder();
-            turnEncoder = turnMotor.getEncoder();
+                turnMotor.getEncoder();
     
             driveMotor.setInverted(constants.kdriveEncoderReversed);
             turnMotor.setInverted(constants.kturningEncoderReversed);

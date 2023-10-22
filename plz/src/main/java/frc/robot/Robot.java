@@ -13,7 +13,6 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
-import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -23,14 +22,9 @@ import frc.robot.Util.Alert;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
-  private RobotContainer m_robotContainer;
-
   private final Alert logNoFileAlert = 
       new Alert("No log file found. Logging disabled.", Alert.AlertType.WARNING);
   
-  private final Alert logRecieverQueueAlert =
-      new Alert("Log reciever queue is full. Logging disabled.", Alert.AlertType.ERROR);
-
   @Override
   public void robotInit() {
 
@@ -83,8 +77,7 @@ public class Robot extends LoggedRobot {
     // END OF LOGGING SETUP
 
 
-    m_robotContainer = new RobotContainer();
-    PortForwarder.add(5800, "photonvision.local", 5800);
+    new RobotContainer();
 
   }
 

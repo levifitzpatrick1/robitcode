@@ -17,6 +17,7 @@ public class Constants{
 
     // Logging Stuff
     private static final RobotType robot = RobotType.ROBOT_PHYSICAL;
+    public static final RobotID robotID = RobotID.ROBOT_OTHER;
     public static final double loopPeriod = 0.02;
     public static final boolean tuningMode = false;
 
@@ -136,6 +137,10 @@ public static enum RobotType {
 
 public static enum Mode {
   REAL, REPLAY, SIM
+}
+
+public static enum RobotID {
+  ROBOT_SCHOOL, ROBOT_OTHER
 }
 
 }

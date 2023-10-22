@@ -12,6 +12,7 @@ import frc.robot.Subsystems.Drive.DriveWithIO;
 import frc.robot.Subsystems.Drive.IOGyro;
 import frc.robot.Subsystems.Drive.IOModuleSim;
 import frc.robot.Subsystems.Drive.IOModuleSparkMAX;
+import frc.robot.Subsystems.Drive.IONavX;
 import frc.robot.Subsystems.Drive.IOPigeon2;
 import frc.robot.Util.Alert;
 
@@ -21,20 +22,32 @@ public class RobotContainer {
 
   private XboxController driverController;
 
-  private boolean isFieldCentric = true;
-
   public RobotContainer() {
 
     if (Constants.getMode() != Mode.REPLAY) {
       switch (Constants.getRobot()) {
         case ROBOT_PHYSICAL:
-        drive = new DriveWithIO(
+        switch (Constants.robotID){
+          case ROBOT_OTHER:
+          drive = new DriveWithIO(
           new IOPigeon2(),
           new IOModuleSparkMAX(3, "FL"),
           new IOModuleSparkMAX(4, "FR"),
           new IOModuleSparkMAX(2, "BL"),
           new IOModuleSparkMAX(1, "BR"));
           break;
+
+          case ROBOT_SCHOOL:
+          drive = new DriveWithIO(
+          new IONavX(),
+          new IOModuleSparkMAX(6, "FL"),
+          new IOModuleSparkMAX(8, "FR"),
+          new IOModuleSparkMAX(5, "BL"),
+          new IOModuleSparkMAX(7, "BR"));
+          break;
+
+        }
+        break;
       case ROBOT_SIMBOT:
         drive = new DriveWithIO(
           new IOGyro() {},
@@ -74,7 +87,7 @@ public class RobotContainer {
     () -> -driverController.getLeftY(),
     () -> -driverController.getLeftX(),
     () -> -driverController.getRightX(),
-    () -> !isFieldCentric 
+    () -> driverController.getLeftBumper()
     ));
   }
 
