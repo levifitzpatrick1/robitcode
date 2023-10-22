@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.Drive;
+package frc.robot.Subsystems.Drive.Gyros;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;

@@ -9,11 +9,11 @@ import frc.robot.Commands.DriveCommands.DriveWithJoysticks;
 import frc.robot.Constants.Constants;
 import frc.robot.Constants.Constants.Mode;
 import frc.robot.Subsystems.Drive.DriveWithIO;
-import frc.robot.Subsystems.Drive.IOGyro;
-import frc.robot.Subsystems.Drive.IOModuleSim;
-import frc.robot.Subsystems.Drive.IOModuleSparkMAX;
-import frc.robot.Subsystems.Drive.IONavX;
-import frc.robot.Subsystems.Drive.IOPigeon2;
+import frc.robot.Subsystems.Drive.Gyros.IOGyro;
+import frc.robot.Subsystems.Drive.Gyros.IONavX;
+import frc.robot.Subsystems.Drive.Gyros.IOPigeon2;
+import frc.robot.Subsystems.Drive.Modules.IOModuleSim;
+import frc.robot.Subsystems.Drive.Modules.IOModuleSparkMAX;
 import frc.robot.Util.Alert;
 
 

@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.Drive;
+package frc.robot.Subsystems.Drive.Modules;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANSparkMax;

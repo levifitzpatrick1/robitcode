@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.Drive;
+package frc.robot.Subsystems.Drive.Gyros;
 
 import org.littletonrobotics.junction.AutoLog;
 
@@ -16,6 +16,6 @@ public interface IOGyro {
         public double velocityRadPerSec = 0.0;
     }
 
-    public default void updateInputs(IOGyroInputs inputs) {}
+    public default void updateInputs(IOGyroInputsAutoLogged gyroInputs) {}
     
 }

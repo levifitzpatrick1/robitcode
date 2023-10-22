@@ -19,6 +19,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Constants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.Constants.DriveConstants;
+import frc.robot.Subsystems.Drive.Gyros.IOGyro;
+import frc.robot.Subsystems.Drive.Gyros.IOGyroInputsAutoLogged;
+import frc.robot.Subsystems.Drive.Modules.IOModule;
+import frc.robot.Subsystems.Drive.Modules.IOModuleInputsAutoLogged;
 import frc.robot.Util.GeomUtil;
 import frc.robot.Util.LoggedTunableNumber;
 

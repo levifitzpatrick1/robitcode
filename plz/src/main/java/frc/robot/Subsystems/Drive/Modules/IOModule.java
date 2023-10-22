@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.Drive;
+package frc.robot.Subsystems.Drive.Modules;
 
 import org.littletonrobotics.junction.AutoLog;
 
@@ -15,7 +15,6 @@ import org.littletonrobotics.junction.AutoLog;
  */
 public interface IOModule {
     @AutoLog
-
     public static class IOModuleInputs {
         public double drivePositionRad = 0.0;
         public double driveVelocityRadPerSec = 0.0;
