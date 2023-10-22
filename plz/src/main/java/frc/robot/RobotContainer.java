@@ -87,7 +87,8 @@ public class RobotContainer {
     () -> -driverController.getLeftY(),
     () -> -driverController.getLeftX(),
     () -> -driverController.getRightX(),
-    () -> driverController.getLeftBumper()
+    () -> driverController.getLeftBumper(),
+    () -> driverController.getRightBumper()
     ));
   }
 

@@ -24,6 +24,7 @@ public class DriveWithJoysticks extends CommandBase {
     private final Supplier<Double> leftYSupplier;
     private final Supplier<Double> rightYSupplier;
     private final Supplier<Boolean> robotRelativeOverride;
+    private final Supplier<Boolean> targetingOverride;
     
     private static final double deadband = 0.1;
 
@@ -36,17 +37,20 @@ public class DriveWithJoysticks extends CommandBase {
      * @param leftYSupplier Supplier for the left joystick Y-axis.
      * @param rightYSupplier Supplier for the right joystick Y-axis.
      * @param robotRelativeOverride Supplier for the field vs robot oriented drive.
+     * @param targetingOverride Supplier for targeting.
      */
-    public DriveWithJoysticks(DriveWithIO drive, 
+    public DriveWithJoysticks(DriveWithIO drive,
     Supplier<Double> leftXSupplier, 
     Supplier<Double> leftYSupplier, 
     Supplier<Double> rightYSupplier, 
-    Supplier<Boolean> robotRelativeOverride) {
+    Supplier<Boolean> robotRelativeOverride,
+    Supplier<Boolean> targetingOverride) {
         this.drive = drive;
         this.leftXSupplier = leftXSupplier;
         this.leftYSupplier = leftYSupplier;
         this.rightYSupplier = rightYSupplier;
         this.robotRelativeOverride = robotRelativeOverride;
+        this.targetingOverride = targetingOverride;
         addRequirements(drive);
     }
 
@@ -85,6 +89,16 @@ public class DriveWithJoysticks extends CommandBase {
                 speeds.vyMetersPerSecond,
                 speeds.omegaRadiansPerSecond,
                 drive.getRotation());
+        }
+
+        if (targetingOverride.get()) {
+            double newRot = drive.getVisionRot(99);
+            if (newRot != 0) {
+                speeds = new ChassisSpeeds(
+                    speeds.vxMetersPerSecond,
+                    speeds.vyMetersPerSecond,
+                    newRot * drive.getMaxAngularSpeedRadiansPerSec());
+            }
         }
 
         drive.runVelocity(speeds);

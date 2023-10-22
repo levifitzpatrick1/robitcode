@@ -3,6 +3,8 @@ package frc.robot.Subsystems.Drive;
 import java.util.Arrays;
 
 import org.littletonrobotics.junction.Logger;
+import org.photonvision.PhotonVersion;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -19,12 +21,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Constants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.Constants.DriveConstants;
+import frc.robot.Constants.Constants.VisionConstants;
 import frc.robot.Subsystems.Drive.Gyros.IOGyro;
 import frc.robot.Subsystems.Drive.Gyros.IOGyroInputsAutoLogged;
 import frc.robot.Subsystems.Drive.Modules.IOModule;
 import frc.robot.Subsystems.Drive.Modules.IOModuleInputsAutoLogged;
 import frc.robot.Util.GeomUtil;
 import frc.robot.Util.LoggedTunableNumber;
+import frc.robot.Util.PhotonCameraWrapper;
 
 /**
  * This class handles the drive functionality of the robot using IO components.
@@ -73,6 +77,10 @@ public class DriveWithIO extends SubsystemBase{
     private DriveMode driveMode = DriveMode.NORMAL;
     private ChassisSpeeds closedLoopSetpoint = new ChassisSpeeds();
     private double characterizationVoltage = 0.0;
+
+
+    public PhotonCameraWrapper frontCamera;
+    private PIDController frontCameraPID;
 
     /**
      * Constructor for DriveWithIO class.
@@ -152,6 +160,10 @@ public class DriveWithIO extends SubsystemBase{
 
         maxAngularSpeed = maxLinearSpeed / Arrays.stream(getModuleTranslations()).map
         (translation -> translation.getNorm()).max(Double::compare).get();
+
+
+        frontCamera = new PhotonCameraWrapper(VisionConstants.kFrontCamName, VisionConstants.kFrontRobotToCam);
+        frontCameraPID = new PIDController(0.5, 0.0, 0.0, Constants.loopPeriod);
 
     }
 
@@ -413,6 +425,22 @@ public class DriveWithIO extends SubsystemBase{
         }
         return driveVelocityAverage / 4.0;
       }
+
+      public double getVisionRot(int targetID) {
+        PhotonPipelineResult result = frontCamera.photonCamera.getLatestResult();
+        double rotSpeed;
+
+        if (result.hasTargets() && (result.getBestTarget().getFiducialId() == targetID || targetID == 99)) {
+            double yaw = Math.toRadians(result.getBestTarget().getYaw());
+            rotSpeed = frontCameraPID.calculate(yaw, 0);
+        } else {
+            rotSpeed = 0;
+        }
+        return rotSpeed;
+    }
+
+
+
     
       /**
        * Sets the drive mode.
