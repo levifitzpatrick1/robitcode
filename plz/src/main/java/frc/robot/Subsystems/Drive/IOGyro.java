@@ -2,6 +2,12 @@ package frc.robot.Subsystems.Drive;
 
 import org.littletonrobotics.junction.AutoLog;
 
+/**
+ * IOGyro serves as a base interface for gyros.
+ * 
+ * <p>This interface outlines the essential methods for obtaining data from a gyro, including
+ * whether or not the gyro is connected, its current position, and its current velocity.</p>
+ */
 public interface IOGyro {
     @AutoLog
     public static class IOGyroInputs {

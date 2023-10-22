@@ -6,8 +6,10 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.Constants;
 
-;
 
+/**
+ * This class extends the IOGyro interface, specifically for the Pigeon2 gyro.
+ */
 public class IOPigeon2 implements IOGyro {
     private final Pigeon2 gyro;
     private final double[] xyzDps = new double[3];

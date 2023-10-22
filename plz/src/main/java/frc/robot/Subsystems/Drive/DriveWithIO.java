@@ -22,6 +22,10 @@ import frc.robot.Constants.Constants.DriveConstants;
 import frc.robot.Util.GeomUtil;
 import frc.robot.Util.LoggedTunableNumber;
 
+/**
+ * This class handles the drive functionality of the robot using IO components.
+ * It extends the SubsystemBase class from WPILib and integrates various sensors and actuators.
+ */
 public class DriveWithIO extends SubsystemBase{
 
     private final IOGyro gyro;
@@ -66,6 +70,16 @@ public class DriveWithIO extends SubsystemBase{
     private ChassisSpeeds closedLoopSetpoint = new ChassisSpeeds();
     private double characterizationVoltage = 0.0;
 
+    /**
+     * Constructor for DriveWithIO class.
+     * Initializes gyro, IO modules, and other parameters based on the robot type.
+     *
+     * @param gyro       The IOGyro object for orientation data.
+     * @param frontLeft  The front-left IO module.
+     * @param frontRight The front-right IO module.
+     * @param backLeft   The back-left IO module.
+     * @param backRight  The back-right IO module.
+     */
     public DriveWithIO(IOGyro gyro, IOModule frontLeft, IOModule frontRight, IOModule backLeft, IOModule backRight) {
         this.gyro = gyro;
         modules[0] = frontLeft;
@@ -294,11 +308,19 @@ public class DriveWithIO extends SubsystemBase{
 }
 
 
+    /**
+     * Sets the velocity of the robot.
+     *
+     * @param speeds The desired chassis speeds.
+     */
     public void runVelocity(ChassisSpeeds speeds) {
         driveMode = DriveMode.NORMAL;
         closedLoopSetpoint = speeds;
     }
 
+    /**
+     * Stops the robot by setting all velocities to zero.
+     */
     public void stop() {
         runVelocity(new ChassisSpeeds());
     }
@@ -307,30 +329,58 @@ public class DriveWithIO extends SubsystemBase{
         driveMode = DriveMode.X;
     }
 
+/**
+ * Gets the max linear speed of the robot.
+ * @return The max linear speed of the robot in meters per second.
+ */
     public double getMaxLinearSpeedMetersPerSec() {
         return maxLinearSpeed;
     }
 
+    /**
+     * Gets the max angular speed of the robot.
+     * @return The max angular speed of the robot in radians per second.
+     */
     public double getMaxAngularSpeedRadiansPerSec() {
         return maxAngularSpeed;
     }
 
+    /**
+     * Gets the current pose of the robot.
+     * @return The current pose of the robot.
+     */
     public Pose2d getPose() {
         return odometryPose;
     }
 
+    /**
+     * Gets the current rotation of the robot.
+     * @return The current rotation of the robot.
+     */
     public Rotation2d getRotation() {
         return odometryPose.getRotation();
     }
 
+    /**
+     * Sets the current pose of the robot.
+     * @param pose The current pose of the robot.
+     */
     public void setPose(Pose2d pose) {
         odometryPose = pose;
     }
 
+    /**
+     * Gets the current field velocity of the robot.
+     * @return The current field velocity of the robot.
+     */
     public Translation2d getFieldVelocity() {
         return fieldVelocity;
     }
 
+    /**
+     * gets the module positions relative to the center of the robot.
+     * @return The module positions relative to the center of the robot.
+     */
     public Translation2d[] getModuleTranslations() {
         return new Translation2d[] {
             new Translation2d(trackWidthX / 2.0, trackWidthY / 2.0),
@@ -339,11 +389,19 @@ public class DriveWithIO extends SubsystemBase{
             new Translation2d(-trackWidthX / 2.0, -trackWidthY / 2.0)};
       }
 
+      /**
+       * Runs the characterization routine.
+       * @param voltage
+       */
       public void runCharacterization(double voltage) {
         driveMode = DriveMode.CHARACTERIZATION;
         characterizationVoltage = voltage;
       }
 
+        /**
+         * Gets the characterization velocity.
+         * @return The characterization velocity.
+         */
       public double getCharacterizationVelocity() {
         double driveVelocityAverage = 0.0;
         for (int i = 0; i < 4; i++) {
@@ -352,6 +410,9 @@ public class DriveWithIO extends SubsystemBase{
         return driveVelocityAverage / 4.0;
       }
     
+      /**
+       * Sets the drive mode.
+       */
     private static enum DriveMode {
         NORMAL, X, CHARACTERIZATION
       }
