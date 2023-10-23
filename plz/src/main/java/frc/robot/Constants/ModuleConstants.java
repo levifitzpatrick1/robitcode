@@ -37,6 +37,7 @@ public static class ModuleSpecificConstants {
     public ModuleSpecificConstants(Integer moduleID, String moduleLoc)
     {
         switch (moduleID) {
+            /* **********Mentor BOT************* */
             // Module 1
             case 1:
                 kAbsoluteEncoderOffset = 0.17724609375;
@@ -77,7 +78,9 @@ public static class ModuleSpecificConstants {
                 kMaxModuleAngularSpeed = 1;
                 break;
 
+            /* **********School BOT************* */
             // Module 5
+            // Back Left
             case 5:
                 kAbsoluteEncoderOffset = 0.122;
                 kAbsoluteEncoderReversed = false;
@@ -88,6 +91,7 @@ public static class ModuleSpecificConstants {
                 break;
 
             // Module 6
+            // Front Left
             case 6:
                 kAbsoluteEncoderOffset = -0.055;                
                 kAbsoluteEncoderReversed = false;
@@ -98,8 +102,10 @@ public static class ModuleSpecificConstants {
                 break;
 
             // Module 7
+            // Back Right
             case 7:
-                kAbsoluteEncoderOffset = -.049;
+                // kAbsoluteEncoderOffset = -.049;
+                kAbsoluteEncoderOffset = -.15;
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 7;
 
@@ -108,6 +114,7 @@ public static class ModuleSpecificConstants {
                 break;
             
             // Module 8
+            // Back Left
             case 8:
                 kAbsoluteEncoderOffset = 0.3;
                 kAbsoluteEncoderReversed = false;
