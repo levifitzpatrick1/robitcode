@@ -5,8 +5,12 @@ import org.littletonrobotics.junction.AutoLog;
 /**
  * IOGyro serves as a base interface for gyros.
  * 
- * <p>This interface outlines the essential methods for obtaining data from a gyro, including
- * whether or not the gyro is connected, its current position, and its current velocity.</p>
+ * <p>
+ * This interface outlines the essential methods for obtaining data from a gyro,
+ * including
+ * whether or not the gyro is connected, its current position, and its current
+ * velocity.
+ * </p>
  */
 public interface IOGyro {
     @AutoLog
@@ -16,6 +20,7 @@ public interface IOGyro {
         public double velocityRadPerSec = 0.0;
     }
 
-    public default void updateInputs(IOGyroInputsAutoLogged gyroInputs) {}
-    
+    public default void updateInputs(IOGyroInputsAutoLogged gyroInputs) {
+    }
+
 }

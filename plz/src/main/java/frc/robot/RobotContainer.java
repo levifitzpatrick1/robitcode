@@ -16,7 +16,6 @@ import frc.robot.Subsystems.Drive.Modules.IOModuleSim;
 import frc.robot.Subsystems.Drive.Modules.IOModuleSparkMAX;
 import frc.robot.Util.Alert;
 
-
 public class RobotContainer {
   private DriveWithIO drive;
 
@@ -27,52 +26,53 @@ public class RobotContainer {
     if (Constants.getMode() != Mode.REPLAY) {
       switch (Constants.getRobot()) {
         case ROBOT_PHYSICAL:
-        switch (Constants.robotID){
-          case ROBOT_OTHER:
+          switch (Constants.robotID) {
+            case ROBOT_OTHER:
+              drive = new DriveWithIO(
+                  new IOPigeon2(),
+                  new IOModuleSparkMAX(3, "FL"),
+                  new IOModuleSparkMAX(4, "FR"),
+                  new IOModuleSparkMAX(2, "BL"),
+                  new IOModuleSparkMAX(1, "BR"));
+              break;
+
+            case ROBOT_SCHOOL:
+              drive = new DriveWithIO(
+                  new IONavX(),
+                  new IOModuleSparkMAX(6, "FL"),
+                  new IOModuleSparkMAX(8, "FR"),
+                  new IOModuleSparkMAX(5, "BL"),
+                  new IOModuleSparkMAX(7, "BR"));
+              break;
+
+          }
+          break;
+        case ROBOT_SIMBOT:
           drive = new DriveWithIO(
-          new IOPigeon2(),
-          new IOModuleSparkMAX(3, "FL"),
-          new IOModuleSparkMAX(4, "FR"),
-          new IOModuleSparkMAX(2, "BL"),
-          new IOModuleSparkMAX(1, "BR"));
+              new IOGyro() {
+              },
+              new IOModuleSim(),
+              new IOModuleSim(),
+              new IOModuleSim(),
+              new IOModuleSim());
           break;
 
-          case ROBOT_SCHOOL:
-          drive = new DriveWithIO(
-          new IONavX(),
-          new IOModuleSparkMAX(6, "FL"),
-          new IOModuleSparkMAX(8, "FR"),
-          new IOModuleSparkMAX(5, "BL"),
-          new IOModuleSparkMAX(7, "BR"));
+        default:
           break;
-
-        }
-        break;
-      case ROBOT_SIMBOT:
-        drive = new DriveWithIO(
-          new IOGyro() {},
-          new IOModuleSim(),
-          new IOModuleSim(),
-          new IOModuleSim(),
-          new IOModuleSim());
-        break;
-
-      default:
-        break;
 
       }
     }
 
     driverController = new XboxController(Constants.OIConstants.kDriverControllerPort);
 
-    drive = drive != null ? drive :
-      new DriveWithIO(
-        new IOGyro() {},
-        new IOModuleSim(),
-        new IOModuleSim(),
-        new IOModuleSim(),
-        new IOModuleSim());
-
+    drive = drive != null ? drive
+        : new DriveWithIO(
+            new IOGyro() {
+            },
+            new IOModuleSim(),
+            new IOModuleSim(),
+            new IOModuleSim(),
+            new IOModuleSim());
 
     if (Constants.tuningMode) {
       new Alert("Tuning Mode Enabled", Alert.AlertType.INFO).set(true);
@@ -84,12 +84,11 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     drive.setDefaultCommand(new DriveWithJoysticks(drive,
-    () -> -driverController.getLeftY(),
-    () -> -driverController.getLeftX(),
-    () -> -driverController.getRightX(),
-    () -> driverController.getLeftBumper(),
-    () -> driverController.getRightBumper()
-    ));
+        () -> -driverController.getLeftY(),
+        () -> -driverController.getLeftX(),
+        () -> -driverController.getRightX(),
+        () -> driverController.getLeftBumper(),
+        () -> driverController.getRightBumper()));
   }
 
 }

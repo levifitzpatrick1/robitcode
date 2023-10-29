@@ -33,5 +33,5 @@ public class IONavX implements IOGyro {
         xyzDps[2] = navx.getRawGyroZ();
 
     }
-    
+
 }

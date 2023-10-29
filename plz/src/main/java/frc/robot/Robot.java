@@ -22,9 +22,8 @@ import frc.robot.Util.Alert;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
-  private final Alert logNoFileAlert = 
-      new Alert("No log file found. Logging disabled.", Alert.AlertType.WARNING);
-  
+  private final Alert logNoFileAlert = new Alert("No log file found. Logging disabled.", Alert.AlertType.WARNING);
+
   @Override
   public void robotInit() {
 
@@ -76,7 +75,6 @@ public class Robot extends LoggedRobot {
     logger.start();
     // END OF LOGGING SETUP
 
-
     new RobotContainer();
 
   }
@@ -85,7 +83,6 @@ public class Robot extends LoggedRobot {
   public void robotPeriodic() {
     Threads.setCurrentThreadPriority(true, 99);
     CommandScheduler.getInstance().run();
-
 
   }
 
