@@ -12,8 +12,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import java.util.EnumSet;
 import java.util.function.Supplier;
 import org.photonvision.PhotonCamera;
-import org.photonvision.SimVisionSystem;
-import org.photonvision.SimVisionTarget;
+import org.photonvision.simulation.SimVisionTarget;
+import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 /**
@@ -36,7 +36,7 @@ public class IOSimVision implements IOVision {
   private PhotonPipelineResult lastResult = new PhotonPipelineResult();
 
   private Supplier<Pose2d> poseSupplier;
-  private SimVisionSystem simVision;
+  private VisionSystemSim simVision;
   private AprilTagFieldLayout layout;
 
   /**
@@ -53,7 +53,7 @@ public class IOSimVision implements IOVision {
     this.layout = layout;
     this.poseSupplier = poseSupplier;
 
-    this.simVision = new SimVisionSystem(
+    this.simVision = new VisionSystemSim(
         CAMERA_NAME, DIAGONAL_FOV, robotToCamera, 9000, IMG_WIDTH, IMG_HEIGHT, 0);
 
     // default to the blue alliance; can be changed by invoking the setLayoutOrigin
