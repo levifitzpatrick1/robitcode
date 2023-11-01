@@ -282,11 +282,11 @@ public class DriveWithIO extends SubsystemBase {
         ChassisSpeeds chassisStateDiff = kinematics.toChassisSpeeds(measuredStatesDiff);
 
         if (gyroInputs.connected) {
-            Pose2d odometryPose = odometryPose.exp(new Twist2d(chassisStateDiff.vxMetersPerSecond,
+            odometryPose = odometryPose.exp(new Twist2d(chassisStateDiff.vxMetersPerSecond,
                     chassisStateDiff.vyMetersPerSecond,
                     gyroInputs.positionRad - lastGyroPositionRad));
         } else {
-            Pose2d odometryPose = odometryPose.exp(
+            odometryPose = odometryPose.exp(
                     new Twist2d(chassisStateDiff.vxMetersPerSecond,
                             chassisStateDiff.vyMetersPerSecond,
                             chassisStateDiff.omegaRadiansPerSecond));
