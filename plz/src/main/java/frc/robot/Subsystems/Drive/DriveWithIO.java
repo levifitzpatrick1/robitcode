@@ -3,7 +3,6 @@ package frc.robot.Subsystems.Drive;
 import java.util.Arrays;
 
 import org.littletonrobotics.junction.Logger;
-import org.photonvision.PhotonVersion;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -32,19 +31,19 @@ import frc.robot.Util.PhotonCameraWrapper;
 
 /**
  * This class handles the drive functionality of the robot using IO components.
- * It extends the SubsystemBase class from WPILib and integrates various sensors and actuators.
+ * It extends the SubsystemBase class from WPILib and integrates various sensors
+ * and actuators.
  */
-public class DriveWithIO extends SubsystemBase{
+public class DriveWithIO extends SubsystemBase {
 
     private final IOGyro gyro;
     private final IOGyroInputsAutoLogged gyroInputs = new IOGyroInputsAutoLogged();
     private final IOModule[] modules = new IOModule[4];
-    private final IOModuleInputsAutoLogged[] moduleInputs =
-    new IOModuleInputsAutoLogged[] {
-        new IOModuleInputsAutoLogged(),
-        new IOModuleInputsAutoLogged(), 
-        new IOModuleInputsAutoLogged(),
-        new IOModuleInputsAutoLogged()
+    private final IOModuleInputsAutoLogged[] moduleInputs = new IOModuleInputsAutoLogged[] {
+            new IOModuleInputsAutoLogged(),
+            new IOModuleInputsAutoLogged(),
+            new IOModuleInputsAutoLogged(),
+            new IOModuleInputsAutoLogged()
     };
 
     private final double maxLinearSpeed;
@@ -71,13 +70,12 @@ public class DriveWithIO extends SubsystemBase{
 
     private Pose2d odometryPose = new Pose2d();
     private Translation2d fieldVelocity = new Translation2d();
-    private double[] lastModulePositionRad = new double[] {0.0, 0.0, 0.0, 0.0};
+    private double[] lastModulePositionRad = new double[] { 0.0, 0.0, 0.0, 0.0 };
     private double lastGyroPositionRad = 0.0;
 
     private DriveMode driveMode = DriveMode.NORMAL;
     private ChassisSpeeds closedLoopSetpoint = new ChassisSpeeds();
     private double characterizationVoltage = 0.0;
-
 
     public PhotonCameraWrapper frontCamera;
     private PIDController frontCameraPID;
@@ -111,43 +109,43 @@ public class DriveWithIO extends SubsystemBase{
                 driveD.initdDefault(0.0);
                 driveS.initdDefault(0.12349);
                 driveV.initdDefault(0.13477);
-                
+
                 turnP.initdDefault(10.0);
                 turnI.initdDefault(0.0);
                 turnD.initdDefault(0.0);
                 break;
             case ROBOT_SIMBOT:
-            maxLinearSpeed = Units.feetToMeters(14.5);
-            wheelRadius = Units.inchesToMeters(1.0);
-            trackWidthX = 0.65;
-            trackWidthY = 0.65;
+                maxLinearSpeed = Units.feetToMeters(14.5);
+                wheelRadius = Units.inchesToMeters(1.0);
+                trackWidthX = 0.65;
+                trackWidthY = 0.65;
 
-            driveP.initdDefault(0.9);
-            driveI.initdDefault(0.0);
-            driveD.initdDefault(0.0);
-            driveS.initdDefault(0.116970);
-            driveV.initdDefault(0.133240);
+                driveP.initdDefault(0.9);
+                driveI.initdDefault(0.0);
+                driveD.initdDefault(0.0);
+                driveS.initdDefault(0.116970);
+                driveV.initdDefault(0.133240);
 
-            turnP.initdDefault(23.0);
-            turnI.initdDefault(0.0);
-            turnD.initdDefault(0.0);
-            break;
-        default:
-            maxLinearSpeed = 0.0;
-            wheelRadius = 0.0;
-            trackWidthX = 0.0;
-            trackWidthY = 0.0;
+                turnP.initdDefault(23.0);
+                turnI.initdDefault(0.0);
+                turnD.initdDefault(0.0);
+                break;
+            default:
+                maxLinearSpeed = 0.0;
+                wheelRadius = 0.0;
+                trackWidthX = 0.0;
+                trackWidthY = 0.0;
 
-            driveP.initdDefault(0.0);
-            driveI.initdDefault(0.0);
-            driveD.initdDefault(0.0);
-            driveS.initdDefault(0.0);
-            driveV.initdDefault(0.0);
+                driveP.initdDefault(0.0);
+                driveI.initdDefault(0.0);
+                driveD.initdDefault(0.0);
+                driveS.initdDefault(0.0);
+                driveV.initdDefault(0.0);
 
-            turnP.initdDefault(0.0);
-            turnI.initdDefault(0.0);
-            turnD.initdDefault(0.0);
-            break;
+                turnP.initdDefault(0.0);
+                turnI.initdDefault(0.0);
+                turnD.initdDefault(0.0);
+                break;
         }
 
         kinematics = new SwerveDriveKinematics(getModuleTranslations());
@@ -158,27 +156,26 @@ public class DriveWithIO extends SubsystemBase{
             turnFeedback[i].enableContinuousInput(-Math.PI, Math.PI);
         }
 
-        maxAngularSpeed = maxLinearSpeed / Arrays.stream(getModuleTranslations()).map
-        (translation -> translation.getNorm()).max(Double::compare).get();
-
+        maxAngularSpeed = maxLinearSpeed / Arrays.stream(getModuleTranslations())
+                .map(translation -> translation.getNorm()).max(Double::compare).get();
 
         frontCamera = new PhotonCameraWrapper(VisionConstants.kFrontCamName, VisionConstants.kFrontRobotToCam);
-        frontCameraPID = new PIDController(0.5, 0.0, 0.0, Constants.loopPeriod);
+        frontCameraPID = new PIDController(0.5, 0.0, 0.05, Constants.loopPeriod);
 
     }
 
     @Override
     public void periodic() {
         gyro.updateInputs(gyroInputs);
-        Logger.getInstance().processInputs("Drive/Gyro", gyroInputs);
+        Logger.processInputs("Drive/Gyro", gyroInputs);
         for (int i = 0; i < 4; i++) {
             modules[i].updateInputs(moduleInputs[i]);
-            Logger.getInstance().processInputs("Drive/Module" + Integer.toString(i), moduleInputs[i]);
+            Logger.processInputs("Drive/Module" + Integer.toString(i), moduleInputs[i]);
         }
 
         if (driveP.hasChanged() || driveI.hasChanged() || driveD.hasChanged()
-         || driveS.hasChanged() || driveV.hasChanged() || turnP.hasChanged()
-         || turnI.hasChanged() || turnD.hasChanged()) {
+                || driveS.hasChanged() || driveV.hasChanged() || turnP.hasChanged()
+                || turnI.hasChanged() || turnD.hasChanged()) {
             driveFeedForward = new SimpleMotorFeedforward(driveS.get(), driveV.get());
             for (int i = 0; i < 4; i++) {
                 driveFeedback[i].setP(driveP.get());
@@ -195,134 +192,123 @@ public class DriveWithIO extends SubsystemBase{
             turnPositions[i] = new Rotation2d(moduleInputs[i].turnAbsolutePositionRad);
         }
 
-        if (DriverStation.isDisabled()){
-            for (int i = 0; i <4; i++){
+        if (DriverStation.isDisabled()) {
+            for (int i = 0; i < 4; i++) {
                 modules[i].setDriveVoltage(0.0);
                 modules[i].setTurnVoltage(0.0);
             }
         } else {
             switch (driveMode) {
                 case NORMAL:
-                SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(closedLoopSetpoint);
-                SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, maxLinearSpeed);
+                    SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(closedLoopSetpoint);
+                    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, maxLinearSpeed);
 
-                boolean isStationary = 
-                Math.abs(closedLoopSetpoint.vxMetersPerSecond) < 1e-3
-                && Math.abs(closedLoopSetpoint.vyMetersPerSecond) < 1e-3
-                && Math.abs(closedLoopSetpoint.omegaRadiansPerSecond) < 1e-3;
+                    boolean isStationary = Math.abs(closedLoopSetpoint.vxMetersPerSecond) < 1e-3
+                            && Math.abs(closedLoopSetpoint.vyMetersPerSecond) < 1e-3
+                            && Math.abs(closedLoopSetpoint.omegaRadiansPerSecond) < 1e-3;
 
-                SwerveModuleState[] optimizedModuleStates = 
-                new SwerveModuleState[] {null, null, null, null};
-                for (int i = 0; i < 4; i++) {
-                    optimizedModuleStates[i] = SwerveModuleState.optimize(
-                        moduleStates[i], turnPositions[i]);
-                    if (isStationary) {
-                        modules[i].setTurnVoltage(0.0);
-                    } else {
-                        modules[i].setTurnVoltage(
-                            turnFeedback[i].calculate(turnPositions[i].getRadians(),
-                            optimizedModuleStates[i].angle.getRadians()));
+                    SwerveModuleState[] optimizedModuleStates = new SwerveModuleState[] { null, null, null, null };
+                    for (int i = 0; i < 4; i++) {
+                        optimizedModuleStates[i] = SwerveModuleState.optimize(
+                                moduleStates[i], turnPositions[i]);
+                        if (isStationary) {
+                            modules[i].setTurnVoltage(0.0);
+                        } else {
+                            modules[i].setTurnVoltage(
+                                    turnFeedback[i].calculate(turnPositions[i].getRadians(),
+                                            optimizedModuleStates[i].angle.getRadians()));
+                        }
+
+                        optimizedModuleStates[i].speedMetersPerSecond *= Math.cos(turnFeedback[i].getPositionError());
+
+                        double velocityRadPerSec = optimizedModuleStates[i].speedMetersPerSecond / wheelRadius;
+                        modules[i].setDriveVoltage(
+                                driveFeedForward.calculate(velocityRadPerSec) +
+                                        driveFeedback[i].calculate(
+                                                moduleInputs[i].driveVelocityRadPerSec, velocityRadPerSec));
+                        // Log individual setpoints
+                        Logger.recordOutput(
+                                "SwerveModuleStatesSetpoints/Drive/" + Integer.toString(i),
+                                velocityRadPerSec);
+                        Logger.recordOutput(
+                                "SwerveModuleStatesSetpoints/Turn/" + Integer.toString(i),
+                                optimizedModuleStates[i].angle.getRadians());
+
                     }
 
-                    optimizedModuleStates[i].speedMetersPerSecond *=
-                    Math.cos(turnFeedback[i].getPositionError());
-
-                    double velocityRadPerSec =
-                    optimizedModuleStates[i].speedMetersPerSecond / wheelRadius;
-                    modules[i].setDriveVoltage(
-                        driveFeedForward.calculate(velocityRadPerSec) +
-                        driveFeedback[i].calculate(
-                            moduleInputs[i].driveVelocityRadPerSec, velocityRadPerSec));
-            // Log individual setpoints
-            Logger.getInstance().recordOutput(
-                "SwerveModuleStatesSetpoints/Drive/" + Integer.toString(i),
-                velocityRadPerSec);
-            Logger.getInstance().recordOutput(
-                "SwerveModuleStatesSetpoints/Turn/" + Integer.toString(i),
-                optimizedModuleStates[i].angle.getRadians());
-          
-                }
-
-                Logger.getInstance().recordOutput("SwerveModuleStates/Setpoints", moduleStates);
-                Logger.getInstance().recordOutput("SwerveModuleStates/OptimizedSetpoints", optimizedModuleStates);
-                break;
+                    Logger.recordOutput("SwerveModuleStates/Setpoints", moduleStates);
+                    Logger.recordOutput("SwerveModuleStates/OptimizedSetpoints", optimizedModuleStates);
+                    break;
 
                 case CHARACTERIZATION:
 
-                for (int i = 0; i < 4; i++) {
-                    modules[i].setTurnVoltage(
-                        turnFeedback[i].calculate(turnPositions[i].getRadians(), 0.0));
-                    modules[i].setDriveVoltage(characterizationVoltage);
-                }
-                break;
+                    for (int i = 0; i < 4; i++) {
+                        modules[i].setTurnVoltage(
+                                turnFeedback[i].calculate(turnPositions[i].getRadians(), 0.0));
+                        modules[i].setDriveVoltage(characterizationVoltage);
+                    }
+                    break;
 
                 case X:
-                for (int i = 0; i < 4; i++) {
-                    Rotation2d targetRotation =
-                        GeomUtil.direction(getModuleTranslations()[i]);
-                    Rotation2d currentRotation = turnPositions[i];
-                    if (Math.abs(
-                        targetRotation.minus(currentRotation).getDegrees()) > 90.0) {
-                        
-                        targetRotation = 
-                            targetRotation.minus(Rotation2d.fromDegrees(180.0));
-                }
+                    for (int i = 0; i < 4; i++) {
+                        Rotation2d targetRotation = GeomUtil.direction(getModuleTranslations()[i]);
+                        Rotation2d currentRotation = turnPositions[i];
+                        if (Math.abs(
+                                targetRotation.minus(currentRotation).getDegrees()) > 90.0) {
 
-                modules[i].setTurnVoltage(turnFeedback[i].calculate(
-                    currentRotation.getRadians(), targetRotation.getRadians()));
-                modules[i].setDriveVoltage(0.0);
-                
+                            targetRotation = targetRotation.minus(Rotation2d.fromDegrees(180.0));
+                        }
+
+                        modules[i].setTurnVoltage(turnFeedback[i].calculate(
+                                currentRotation.getRadians(), targetRotation.getRadians()));
+                        modules[i].setDriveVoltage(0.0);
+
+                    }
+                    break;
             }
-            break;
         }
+
+        SwerveModuleState[] measuredStatesDiff = new SwerveModuleState[4];
+        for (int i = 0; i < 4; i++) {
+
+            measuredStatesDiff[i] = new SwerveModuleState(
+                    (moduleInputs[i].drivePositionRad - lastModulePositionRad[i])
+                            * wheelRadius,
+                    turnPositions[i]);
+
+            lastModulePositionRad[i] = moduleInputs[i].drivePositionRad;
+        }
+
+        ChassisSpeeds chassisStateDiff = kinematics.toChassisSpeeds(measuredStatesDiff);
+
+        if (gyroInputs.connected) {
+            odometryPose = odometryPose.exp(new Twist2d(chassisStateDiff.vxMetersPerSecond,
+                    chassisStateDiff.vyMetersPerSecond,
+                    gyroInputs.positionRad - lastGyroPositionRad));
+        } else {
+            odometryPose = odometryPose.exp(
+                    new Twist2d(chassisStateDiff.vxMetersPerSecond,
+                            chassisStateDiff.vyMetersPerSecond,
+                            chassisStateDiff.omegaRadiansPerSecond));
+        }
+
+        lastGyroPositionRad = gyroInputs.positionRad;
+
+        SwerveModuleState[] measuredStates = new SwerveModuleState[] { null, null, null, null };
+        for (int i = 0; i < 4; i++) {
+            measuredStates[i] = new SwerveModuleState(
+                    moduleInputs[i].driveVelocityRadPerSec * wheelRadius,
+                    turnPositions[i]);
+        }
+
+        ChassisSpeeds chassisState = kinematics.toChassisSpeeds(measuredStates);
+        fieldVelocity = new Translation2d(chassisState.vxMetersPerSecond,
+                chassisState.vyMetersPerSecond).rotateBy(getRotation());
+
+        Logger.recordOutput("SwerveModuleStates/Measured", measuredStates);
+        Logger.recordOutput("Odometry/Robot", odometryPose);
+
     }
-
-
-    SwerveModuleState[] measuredStatesDiff = new SwerveModuleState[4];
-    for (int i = 0; i < 4; i++) {
-    
-        measuredStatesDiff[i] = new SwerveModuleState(
-            (moduleInputs[i].drivePositionRad - lastModulePositionRad[i])
-            * wheelRadius,
-            turnPositions[i]);
-        
-        lastModulePositionRad[i] = moduleInputs[i].drivePositionRad;
-    }
-
-    ChassisSpeeds chassisStateDiff = 
-        kinematics.toChassisSpeeds(measuredStatesDiff);
-    
-    if (gyroInputs.connected) {
-        odometryPose =
-            odometryPose.exp(new Twist2d(chassisStateDiff.vxMetersPerSecond,
-            chassisStateDiff.vyMetersPerSecond,
-            gyroInputs.positionRad - lastGyroPositionRad));
-    } else {
-        odometryPose = odometryPose.exp(
-            new Twist2d(chassisStateDiff.vxMetersPerSecond,
-            chassisStateDiff.vyMetersPerSecond,
-            chassisStateDiff.omegaRadiansPerSecond));
-    }
-
-    lastGyroPositionRad = gyroInputs.positionRad;
-
-    SwerveModuleState[] measuredStates = 
-        new SwerveModuleState[] {null, null, null, null};
-    for (int i = 0; i < 4; i++) {
-        measuredStates[i] = new SwerveModuleState(
-            moduleInputs[i].driveVelocityRadPerSec * wheelRadius,
-            turnPositions[i]);
-    }
-
-    ChassisSpeeds chassisState = kinematics.toChassisSpeeds(measuredStates);
-    fieldVelocity = new Translation2d(chassisState.vxMetersPerSecond,
-        chassisState.vyMetersPerSecond).rotateBy(getRotation());
-
-    Logger.getInstance().recordOutput("SwerveModuleStates/Measured", measuredStates);
-    Logger.getInstance().recordOutput("Odometry/Robot", odometryPose);
-
-}
-
 
     /**
      * Sets the velocity of the robot.
@@ -345,16 +331,18 @@ public class DriveWithIO extends SubsystemBase{
         driveMode = DriveMode.X;
     }
 
-/**
- * Gets the max linear speed of the robot.
- * @return The max linear speed of the robot in meters per second.
- */
+    /**
+     * Gets the max linear speed of the robot.
+     * 
+     * @return The max linear speed of the robot in meters per second.
+     */
     public double getMaxLinearSpeedMetersPerSec() {
         return maxLinearSpeed;
     }
 
     /**
      * Gets the max angular speed of the robot.
+     * 
      * @return The max angular speed of the robot in radians per second.
      */
     public double getMaxAngularSpeedRadiansPerSec() {
@@ -363,6 +351,7 @@ public class DriveWithIO extends SubsystemBase{
 
     /**
      * Gets the current pose of the robot.
+     * 
      * @return The current pose of the robot.
      */
     public Pose2d getPose() {
@@ -371,6 +360,7 @@ public class DriveWithIO extends SubsystemBase{
 
     /**
      * Gets the current rotation of the robot.
+     * 
      * @return The current rotation of the robot.
      */
     public Rotation2d getRotation() {
@@ -379,6 +369,7 @@ public class DriveWithIO extends SubsystemBase{
 
     /**
      * Sets the current pose of the robot.
+     * 
      * @param pose The current pose of the robot.
      */
     public void setPose(Pose2d pose) {
@@ -387,6 +378,7 @@ public class DriveWithIO extends SubsystemBase{
 
     /**
      * Gets the current field velocity of the robot.
+     * 
      * @return The current field velocity of the robot.
      */
     public Translation2d getFieldVelocity() {
@@ -395,38 +387,41 @@ public class DriveWithIO extends SubsystemBase{
 
     /**
      * gets the module positions relative to the center of the robot.
+     * 
      * @return The module positions relative to the center of the robot.
      */
     public Translation2d[] getModuleTranslations() {
         return new Translation2d[] {
-            new Translation2d(trackWidthX / 2.0, trackWidthY / 2.0),
-            new Translation2d(trackWidthX / 2.0, -trackWidthY / 2.0),
-            new Translation2d(-trackWidthX / 2.0, trackWidthY / 2.0),
-            new Translation2d(-trackWidthX / 2.0, -trackWidthY / 2.0)};
-      }
+                new Translation2d(trackWidthX / 2.0, trackWidthY / 2.0),
+                new Translation2d(trackWidthX / 2.0, -trackWidthY / 2.0),
+                new Translation2d(-trackWidthX / 2.0, trackWidthY / 2.0),
+                new Translation2d(-trackWidthX / 2.0, -trackWidthY / 2.0) };
+    }
 
-      /**
-       * Runs the characterization routine.
-       * @param voltage
-       */
-      public void runCharacterization(double voltage) {
+    /**
+     * Runs the characterization routine.
+     * 
+     * @param voltage
+     */
+    public void runCharacterization(double voltage) {
         driveMode = DriveMode.CHARACTERIZATION;
         characterizationVoltage = voltage;
-      }
+    }
 
-        /**
-         * Gets the characterization velocity.
-         * @return The characterization velocity.
-         */
-      public double getCharacterizationVelocity() {
+    /**
+     * Gets the characterization velocity.
+     * 
+     * @return The characterization velocity.
+     */
+    public double getCharacterizationVelocity() {
         double driveVelocityAverage = 0.0;
         for (int i = 0; i < 4; i++) {
-          driveVelocityAverage += moduleInputs[i].driveVelocityRadPerSec;
+            driveVelocityAverage += moduleInputs[i].driveVelocityRadPerSec;
         }
         return driveVelocityAverage / 4.0;
-      }
+    }
 
-      public double getVisionRot(int targetID) {
+    public double getVisionRot(int targetID) {
         PhotonPipelineResult result = frontCamera.photonCamera.getLatestResult();
         double rotSpeed;
 
@@ -439,14 +434,11 @@ public class DriveWithIO extends SubsystemBase{
         return rotSpeed;
     }
 
-
-
-    
-      /**
-       * Sets the drive mode.
-       */
+    /**
+     * Sets the drive mode.
+     */
     private static enum DriveMode {
         NORMAL, X, CHARACTERIZATION
-      }
-    
+    }
+
 }

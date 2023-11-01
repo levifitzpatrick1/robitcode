@@ -1,24 +1,22 @@
 package frc.robot.Subsystems.Drive.Modules;
 
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Constants.Constants;
 import frc.robot.Constants.ModuleConstants;
 
-
-
 /**
  * IOModuleSim is a simulation class for the IOModule interface.
  *
- * <p>This class uses FlywheelSim to simulate the behavior of drive and turn motors.</p>
+ * <p>
+ * This class uses FlywheelSim to simulate the behavior of drive and turn
+ * motors.
+ * </p>
  */
 public class IOModuleSim implements IOModule {
-    private FlywheelSim driveSim =
-        new FlywheelSim(DCMotor.getNEO(1), ModuleConstants.kDriveMotorGearRatio, 0.025);
-    private FlywheelSim turnSim =
-        new FlywheelSim(DCMotor.getNEO(1), ModuleConstants.kTurningMotorGearRatio, 0.025);
+    private FlywheelSim driveSim = new FlywheelSim(DCMotor.getNEO(1), ModuleConstants.kDriveMotorGearRatio, 0.025);
+    private FlywheelSim turnSim = new FlywheelSim(DCMotor.getNEO(1), ModuleConstants.kTurningMotorGearRatio, 0.025);
 
     private double turnRelativePositionRad = 0.0;
     private double turnAbsolutePositionRad = Math.random() * 2.0 * Math.PI;
@@ -30,12 +28,11 @@ public class IOModuleSim implements IOModule {
      *
      * @param inputs The IOModuleInputs object to update.
      */
-    public void updateInputs(IOModuleInputs inputs){
+    public void updateInputs(IOModuleInputs inputs) {
         driveSim.update(Constants.loopPeriod);
         turnSim.update(Constants.loopPeriod);
 
-        double angledDiffRad = 
-            turnSim.getAngularVelocityRadPerSec() * Constants.loopPeriod;
+        double angledDiffRad = turnSim.getAngularVelocityRadPerSec() * Constants.loopPeriod;
         turnRelativePositionRad += angledDiffRad;
         turnAbsolutePositionRad += angledDiffRad;
         while (turnAbsolutePositionRad < 0) {
@@ -46,20 +43,18 @@ public class IOModuleSim implements IOModule {
         }
 
         inputs.drivePositionRad = inputs.drivePositionRad
-            + (driveSim.getAngularVelocityRadPerSec() * Constants.loopPeriod);
+                + (driveSim.getAngularVelocityRadPerSec() * Constants.loopPeriod);
         inputs.driveVelocityRadPerSec = driveSim.getAngularVelocityRadPerSec();
         inputs.driveAppliedVolts = driveAppliedVolts;
-        inputs.driveCurrentAmps = 
-            new double[] {Math.abs(driveSim.getCurrentDrawAmps())};
+        inputs.driveCurrentAmps = new double[] { Math.abs(driveSim.getCurrentDrawAmps()) };
         inputs.driveTempC = new double[] {};
 
         inputs.turnAbsolutePositionRad = turnAbsolutePositionRad;
         inputs.turnPositionRad = turnRelativePositionRad;
         inputs.turnVelocityRadPerSec = turnSim.getAngularVelocityRadPerSec();
         inputs.turnAppliedVolts = turnAppliedVolts;
-        inputs.turnCurrentAmps = 
-            new double[] {Math.abs(turnSim.getCurrentDrawAmps())};
-        inputs.turnTempC = new double[] {};    
+        inputs.turnCurrentAmps = new double[] { Math.abs(turnSim.getCurrentDrawAmps()) };
+        inputs.turnTempC = new double[] {};
     }
 
     /**
@@ -71,7 +66,7 @@ public class IOModuleSim implements IOModule {
         driveAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
         driveSim.setInputVoltage(volts);
     }
-    
+
     /**
      * Sets the applied voltage for the turn motor in the simulation.
      *

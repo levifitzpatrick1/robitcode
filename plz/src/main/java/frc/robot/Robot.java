@@ -22,60 +22,57 @@ import frc.robot.Util.Alert;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
-  private final Alert logNoFileAlert = 
-      new Alert("No log file found. Logging disabled.", Alert.AlertType.WARNING);
-  
+  private final Alert logNoFileAlert = new Alert("No log file found. Logging disabled.", Alert.AlertType.WARNING);
+
   @Override
   public void robotInit() {
 
     // SETS UP THE LOGGING
-    Logger logger = Logger.getInstance();
     setUseTiming(Constants.getMode() != Mode.REPLAY);
-    logger.recordMetadata("Robot", Constants.getRobot().toString());
-    logger.recordMetadata("TuningMode", Boolean.toString(Constants.tuningMode));
-    logger.recordMetadata("RuntimeType", getRuntimeType().toString());
-    logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
-    logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
-    logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
-    logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
-    logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+    Logger.recordMetadata("Robot", Constants.getRobot().toString());
+    Logger.recordMetadata("TuningMode", Boolean.toString(Constants.tuningMode));
+    Logger.recordMetadata("RuntimeType", getRuntimeType().toString());
+    Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+    Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
     switch (BuildConstants.DIRTY) {
       case 0:
-        logger.recordMetadata("GitDirty", "All changes committed");
+        Logger.recordMetadata("GitDirty", "All changes committed");
         break;
       case 1:
-        logger.recordMetadata("GitDirty", "Uncomitted changes");
+        Logger.recordMetadata("GitDirty", "Uncomitted changes");
         break;
       default:
-        logger.recordMetadata("GitDirty", "Unknown");
+        Logger.recordMetadata("GitDirty", "Unknown");
         break;
     }
     switch (Constants.getMode()) {
       case REAL:
         String folder = Constants.logFolders.get(Constants.getRobot());
         if (folder != null) {
-          logger.addDataReceiver(new WPILOGWriter(folder));
+          Logger.addDataReceiver(new WPILOGWriter(folder));
         } else {
           logNoFileAlert.set(true);
         }
-        logger.addDataReceiver(new NT4Publisher());
+        Logger.addDataReceiver(new NT4Publisher());
         LoggedPowerDistribution.getInstance();
         break;
 
       case SIM:
-        logger.addDataReceiver(new NT4Publisher());
+        Logger.addDataReceiver(new NT4Publisher());
         break;
 
       case REPLAY:
         String path = LogFileUtil.findReplayLog();
-        logger.setReplaySource(new WPILOGReader(path));
-        logger.addDataReceiver(
+        Logger.setReplaySource(new WPILOGReader(path));
+        Logger.addDataReceiver(
             new WPILOGWriter(LogFileUtil.addPathSuffix(path, "_sim")));
         break;
     }
-    logger.start();
+    Logger.start();
     // END OF LOGGING SETUP
-
 
     new RobotContainer();
 
@@ -85,7 +82,6 @@ public class Robot extends LoggedRobot {
   public void robotPeriodic() {
     Threads.setCurrentThreadPriority(true, 99);
     CommandScheduler.getInstance().run();
-
 
   }
 
