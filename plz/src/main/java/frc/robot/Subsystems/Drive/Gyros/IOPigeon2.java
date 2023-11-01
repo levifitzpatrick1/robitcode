@@ -1,9 +1,11 @@
 package frc.robot.Subsystems.Drive.Gyros;
 
+
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.Constants;
+
 
 /**
  * This class extends the IOGyro interface, specifically for the Pigeon2 gyro.
@@ -21,7 +23,7 @@ public class IOPigeon2 implements IOGyro {
                 throw new RuntimeException("Invalid robot type");
         }
     }
-
+    
     public void updateInputs(IOGyroInputs inputs) {
 
         inputs.connected = gyro.getStickyFaultField().getValue() == 0;
@@ -33,5 +35,5 @@ public class IOPigeon2 implements IOGyro {
         xyzDps[2] = gyro.getAngularVelocityZ().getValue();
 
     }
-
+    
 }

@@ -3,6 +3,7 @@ package frc.robot.Util;
 import java.io.IOException;
 import java.util.Optional;
 
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,23 +18,30 @@ public class PhotonCameraWrapper {
     public PhotonCamera photonCamera;
     PhotonPoseEstimator photonPoseEstimator;
 
-    public PhotonCameraWrapper(String name, Transform3d robotToCam) throws IOException {
+    public PhotonCameraWrapper(String name, Transform3d robotToCam) {
         photonCamera = new PhotonCamera(name);
-
-        // Attempt to load the AprilTagFieldLayout that will tell us where the tags are
-        // on the field.
-        AprilTagFieldLayout fieldLayout = AprilTagFields.k2023ChargedUp.loadAprilTagLayoutField();
-        // Create pose estimator
-        photonPoseEstimator = new PhotonPoseEstimator(
-                fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_RIO, photonCamera, robotToCam);
-        photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+        
+        
+        try {
+            // Attempt to load the AprilTagFieldLayout that will tell us where the tags are on the field.
+            AprilTagFieldLayout fieldLayout = AprilTagFields.k2023ChargedUp.loadAprilTagLayoutField();
+            // Create pose estimator
+            photonPoseEstimator =
+                    new PhotonPoseEstimator(
+                            fieldLayout, PoseStrategy.MULTI_TAG_PNP, photonCamera, robotToCam);
+            photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+        } catch (IOException e) {
+            // The AprilTagFieldLayout failed to load. We won't be able to estimate poses if we don't know
+            // where the tags are.
+            DriverStation.reportError("Failed to load AprilTagFieldLayout", e.getStackTrace());
+            photonPoseEstimator = null;
+        }
     }
 
     /**
      * @param estimatedRobotPose The current best guess at robot pose
-     * @return an EstimatedRobotPose with an estimated pose, the timestamp, and
-     *         targets used to create
-     *         the estimate
+     * @return an EstimatedRobotPose with an estimated pose, the timestamp, and targets used to create
+     *     the estimate
      */
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
         if (photonPoseEstimator == null) {
