@@ -1,71 +1,74 @@
 package frc.robot.Subsystems.Vision;
 
-import edu.wpi.first.networktables.DoubleArraySubscriber;
-import edu.wpi.first.networktables.NetworkTableEvent;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.Util.Alert;
-import frc.robot.Util.Alert.AlertType;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Optional;
 
-import java.util.EnumSet;
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
-import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
-/** PhotonVision-based implementation of the VisionIO interface. */
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.Filesystem;
+
 public class IOPhotonVision implements IOVision {
-  private Alert noCameraConnectedAlert = new Alert("specified camera not connected", AlertType.WARNING);
-  private final PhotonCamera camera;
+    private final PhotonCamera[] cameras;
+    private final Transform3d[] cameraPoses;
+    
+    private final AprilTagFieldLayout fieldLayout;
+    private final Path fieldJsonPath = Paths.get(Filesystem.getDeployDirectory().toString(), "field.json");
+    private final ArrayList<Pair<PhotonCamera, Transform3d>> cameraList = new ArrayList<Pair<PhotonCamera, Transform3d>>();
 
-  private double lastTimestamp = 0;
-  private PhotonPipelineResult lastResult = new PhotonPipelineResult();
+    private final ArrayList<PhotonPoseEstimator> poseEstimators = new ArrayList<PhotonPoseEstimator>();
 
-  /**
-   * Creates a new IOPhotonVision object.
-   *
-   * @param cameraName the name of the PhotonVision camera to use; the name must
-   *                   be unique
-   */
-  public IOPhotonVision(String cameraName) {
-    camera = new PhotonCamera(cameraName);
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    private Optional<EstimatedRobotPose> estimatedPose;
 
-    /*
-     * based on
-     * https://docs.wpilib.org/en/latest/docs/software/networktables/listening-for-
-     * change.html#listening-for-changes
-     * and
-     * https://github.com/Mechanical-Advantage/RobotCode2022/blob/main/src/main/java
-     * /frc/robot/subsystems/vision/IOPhotonVision.java
-     */
-    DoubleArraySubscriber targetPoseSub = inst.getTable("/photonvision/" + cameraName)
-        .getDoubleArrayTopic("targetPose")
-        .subscribe(new double[0]);
+    public IOPhotonVision(PhotonCamera[] cameras, Transform3d[] cameraPoses) {
+        this.cameras = new PhotonCamera[cameras.length];
+        this.cameraPoses = new Transform3d[cameraPoses.length];
 
-    inst.addListener(
-        targetPoseSub,
-        EnumSet.of(NetworkTableEvent.Kind.kValueAll),
-        event -> {
-          PhotonPipelineResult result = camera.getLatestResult();
+        for (int i = 0; i < cameras.length; i++) {
+            this.cameras[i] = cameras[i];
+            this.cameraPoses[i] = cameraPoses[i];
+            cameraList.add(new Pair<PhotonCamera, Transform3d>(cameras[i], cameraPoses[i]));
+        }
 
-          double timestamp = result.getTimestampSeconds();
-          synchronized (IOPhotonVision.this) {
-            lastTimestamp = timestamp;
-            lastResult = result;
-          }
-        });
-  }
+        try {
+            fieldLayout = new AprilTagFieldLayout(fieldJsonPath);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load field layout", e);
+        }
 
-  /**
-   * Updates the specified IOVisionInputs object with the latest data from the
-   * camera.
-   *
-   * @param inputs the IOVisionInputs object to update with the latest data from
-   *               the camera
-   */
-  @Override
-  public synchronized void updateInputs(IOVisionInputs inputs) {
-    inputs.lastTimestamp = this.lastTimestamp;
-    inputs.lastResult = this.lastResult;
+        for (int i = 0; i < cameras.length; i++){
+            PhotonPoseEstimator pe = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP, cameras[i], cameraPoses[i]);
+            pe.setLastPose(new Pose2d());
+            pe.setReferencePose(new Pose2d());
+            poseEstimators.add(pe);
+        }
+        
+    }
 
-    noCameraConnectedAlert.set(!camera.isConnected());
-  }
+    @Override
+    public void setReferencePose(Pose2d pose) {
+        for (PhotonPoseEstimator pe : poseEstimators) {
+            pe.setReferencePose(pose);
+        }
+    }
+
+    @Override
+    public Optional<EstimatedRobotPose> getRobotPose() {
+        if (estimatedPose == null) {
+            return Optional.empty();
+        } else {
+            return estimatedPose;
+        }
+    }
+
+
+    
 }
