@@ -137,76 +137,76 @@ public static class ModuleSpecificConstants {
             // Front Left
             case "FL":
                 // Other Bot
-                kdriveEncoderReversed = true;
-                kturningEncoderReversed = true;
+                //kdriveEncoderReversed = true;
+                //kturningEncoderReversed = true;
 
-                kdriveMotorID = 11;
-                kturningMotorID = 12;
-                break;
+                //kdriveMotorID = 11;
+                //kturningMotorID = 12;
+                //break;
 
 
                 //School Bot
-                // kdriveEncoderReversed = false;
-                // kturningEncoderReversed = true;
+                 kdriveEncoderReversed = false;
+                 kturningEncoderReversed = true;
 
-                // kdriveMotorID = 18;
-                // kturningMotorID = 17;
-                // break;
+                 kdriveMotorID = 18;
+                 kturningMotorID = 17;
+                 break;
             
             // Front Right
             case "FR":
                 //Other Bot
-                kdriveEncoderReversed = false;
-                kturningEncoderReversed = true;
+                //kdriveEncoderReversed = false;
+                //kturningEncoderReversed = true;
 
-                kdriveMotorID = 17;
-                kturningMotorID = 18;
-                break;
+                //kdriveMotorID = 17;
+                //kturningMotorID = 18;
+                //break;
 
                 //School Bot
-                // kdriveEncoderReversed = true;
-                // kturningEncoderReversed = true;
+                 kdriveEncoderReversed = true;
+                 kturningEncoderReversed = true;
 
-                // kdriveMotorID = 12;
-                // kturningMotorID = 11;
-                // break;
+                 kdriveMotorID = 12;
+                 kturningMotorID = 11;
+                 break;
 
             // Back Left
             case "BL":
                 //Other Bot
-                kdriveEncoderReversed = true;
-                kturningEncoderReversed = true;
+                //kdriveEncoderReversed = true;
+                //kturningEncoderReversed = true;
 
-                kdriveMotorID = 13;
-                kturningMotorID = 14;
-                break;
+                //kdriveMotorID = 13;
+                //kturningMotorID = 14;
+                //break;
             
                 //School Bot
-                // kdriveEncoderReversed = false;
-                // kturningEncoderReversed = true;
+                 kdriveEncoderReversed = false;
+                 kturningEncoderReversed = true;
 
-                // kdriveMotorID = 16;
-                // kturningMotorID = 15;
-                // break;
+                 kdriveMotorID = 16;
+                 kturningMotorID = 15;
+                 break;
 
             // Back Right
             case "BR":
 
                 //Other Bot
-                kdriveEncoderReversed = false;
-                kturningEncoderReversed = true;
+                //kdriveEncoderReversed = false;
+                //kturningEncoderReversed = true;
 
-                kdriveMotorID = 15;
-                kturningMotorID = 16;
-                break;
+                //kdriveMotorID = 15;
+                //kturningMotorID = 16;
+                //break;
 
                 //School Bot
-                // kdriveEncoderReversed = true;
-                // kturningEncoderReversed = true;
+                 kdriveEncoderReversed = true;
+                 kturningEncoderReversed = true;
 
-                // kdriveMotorID = 14;
-                // kturningMotorID = 13;
-                // break;
+                 kdriveMotorID = 14;
+                 kturningMotorID = 13;
+                 break;
             
         }
 }
