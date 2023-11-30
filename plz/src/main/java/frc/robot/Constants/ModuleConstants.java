@@ -91,9 +91,9 @@ public static class ModuleSpecificConstants {
                 kMaxModuleAngularSpeed = 1;
                 break;
 
-            // Module 5
+            // Module 5 "BL" SCHOOLBOT
             case 5:
-                kAbsoluteEncoderOffset = 0;
+                kAbsoluteEncoderOffset = 0.4;
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 5;
 
@@ -101,9 +101,9 @@ public static class ModuleSpecificConstants {
                 kMaxModuleAngularSpeed = 1;
                 break;
 
-            // Module 6
+            // Module 6 "FL" SCHOOLBOT
             case 6:
-                kAbsoluteEncoderOffset = 0;                
+                kAbsoluteEncoderOffset = -0.05;                
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 6;
 
@@ -111,7 +111,7 @@ public static class ModuleSpecificConstants {
                 kMaxModuleAngularSpeed = 1;
                 break;
 
-            // Module 7
+            // Module 7 "BR" SCHOOLBOT
             case 7:
                 kAbsoluteEncoderOffset = 0;
                 kAbsoluteEncoderReversed = false;
@@ -121,9 +121,9 @@ public static class ModuleSpecificConstants {
                 kMaxModuleAngularSpeed = 1;
                 break;
             
-            // Module 8
+            // Module 8 "FR" SCHOOLBOT
             case 8:
-                kAbsoluteEncoderOffset = 0;
+                kAbsoluteEncoderOffset = -0.10;
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 8;
 
@@ -164,7 +164,7 @@ public static class ModuleSpecificConstants {
                 //break;
 
                 //School Bot
-                 kdriveEncoderReversed = true;
+                 kdriveEncoderReversed = false;
                  kturningEncoderReversed = true;
 
                  kdriveMotorID = 12;
