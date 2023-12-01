@@ -105,7 +105,7 @@ public static class ModuleSpecificConstants {
             // Back Right
             case 7:
                 // kAbsoluteEncoderOffset = -.049;
-                kAbsoluteEncoderOffset = -.15;
+                kAbsoluteEncoderOffset = 0.059;
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 7;
 
@@ -114,9 +114,9 @@ public static class ModuleSpecificConstants {
                 break;
             
             // Module 8
-            // Back Left
+            // Front Right
             case 8:
-                kAbsoluteEncoderOffset = 0.3;
+                kAbsoluteEncoderOffset = 0.565;
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 8;
 
