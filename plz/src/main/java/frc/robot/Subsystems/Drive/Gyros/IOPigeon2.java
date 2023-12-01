@@ -26,7 +26,7 @@ public class IOPigeon2 implements IOGyro {
     
     public void updateInputs(IOGyroInputs inputs) {
 
-        inputs.connected = gyro.getStickyFaultField().getValue() == 0;
+        //inputs.connected = gyro.getStickyFaultField().getValue() == 0;
         inputs.positionRad = Units.degreesToRadians(gyro.getAngle());
         inputs.velocityRadPerSec = Units.degreesToRadians(gyro.getRate());
 

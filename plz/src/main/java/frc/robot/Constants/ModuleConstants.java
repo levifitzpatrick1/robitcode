@@ -136,77 +136,83 @@ public static class ModuleSpecificConstants {
         switch (moduleLoc) {
             // Front Left
             case "FL":
-                // Other Bot
-                //kdriveEncoderReversed = true;
-                //kturningEncoderReversed = true;
+            switch (Constants.robotID) {
+                case ROBOT_OTHER:
+                    kdriveEncoderReversed = false;
+                    kturningEncoderReversed = true;
 
-                //kdriveMotorID = 11;
-                //kturningMotorID = 12;
-                //break;
+                    kdriveMotorID = 14;
+                    kturningMotorID = 13;
+                    break;
+                case ROBOT_SCHOOL:
+                    kdriveEncoderReversed = false;
+                    kturningEncoderReversed = true;
 
-
-                //School Bot
-                 kdriveEncoderReversed = false;
-                 kturningEncoderReversed = true;
-
-                 kdriveMotorID = 18;
-                 kturningMotorID = 17;
-                 break;
+                    kdriveMotorID = 16;
+                    kturningMotorID = 15;
+                    break;
+            }
+            break;
             
             // Front Right
             case "FR":
-                //Other Bot
-                //kdriveEncoderReversed = false;
-                //kturningEncoderReversed = true;
+            switch (Constants.robotID) {
+                case ROBOT_OTHER:
+                    kdriveEncoderReversed = false;
+                    kturningEncoderReversed = true;
 
-                //kdriveMotorID = 17;
-                //kturningMotorID = 18;
-                //break;
+                    kdriveMotorID = 18;
+                    kturningMotorID = 17;
+                    break;
+                case ROBOT_SCHOOL:
+                    kdriveEncoderReversed = false;
+                    kturningEncoderReversed = true;
 
-                //School Bot
-                 kdriveEncoderReversed = false;
-                 kturningEncoderReversed = true;
-
-                 kdriveMotorID = 12;
-                 kturningMotorID = 11;
-                 break;
+                    kdriveMotorID = 12;
+                    kturningMotorID = 11;
+                    break;
+            }
+            break;
 
             // Back Left
             case "BL":
-                //Other Bot
-                //kdriveEncoderReversed = true;
-                //kturningEncoderReversed = true;
+            switch (Constants.robotID) {
+                case ROBOT_OTHER:
+                    kdriveEncoderReversed = true;
+                    kturningEncoderReversed = true;
 
-                //kdriveMotorID = 13;
-                //kturningMotorID = 14;
-                //break;
-            
-                //School Bot
-                 kdriveEncoderReversed = false;
-                 kturningEncoderReversed = true;
+                    kdriveMotorID = 16;
+                    kturningMotorID = 15;
+                    break;
+                case ROBOT_SCHOOL:
+                    kdriveEncoderReversed = true;
+                    kturningEncoderReversed = true;
 
-                 kdriveMotorID = 16;
-                 kturningMotorID = 15;
-                 break;
+                    kdriveMotorID = 14;
+                    kturningMotorID = 13;
+                    break;
+            }
+            break;
 
             // Back Right
             case "BR":
+            switch (Constants.robotID) {
+                case ROBOT_OTHER:
+                    kdriveEncoderReversed = true;
+                    kturningEncoderReversed = true;
 
-                //Other Bot
-                //kdriveEncoderReversed = false;
-                //kturningEncoderReversed = true;
+                    kdriveMotorID = 12;
+                    kturningMotorID = 11;
+                    break;
+                case ROBOT_SCHOOL:
+                    kdriveEncoderReversed = true;
+                    kturningEncoderReversed = true;
 
-                //kdriveMotorID = 15;
-                //kturningMotorID = 16;
-                //break;
-
-                //School Bot
-                 kdriveEncoderReversed = true;
-                 kturningEncoderReversed = true;
-
-                 kdriveMotorID = 14;
-                 kturningMotorID = 13;
-                 break;
+                    kdriveMotorID = 18;
+                    kturningMotorID = 17;
+                    break;
+            }
+            break;
             
         }
 }

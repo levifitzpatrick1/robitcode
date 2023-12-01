@@ -11,7 +11,7 @@ import org.littletonrobotics.junction.AutoLog;
 public interface IOGyro {
     @AutoLog
     public static class IOGyroInputs {
-        public boolean connected = false;
+        public boolean connected = true;
         public double positionRad = 0.0;
         public double velocityRadPerSec = 0.0;
     }
