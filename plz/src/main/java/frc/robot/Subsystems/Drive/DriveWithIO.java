@@ -430,6 +430,9 @@ public class DriveWithIO extends SubsystemBase{
         PhotonPipelineResult result = frontCamera.photonCamera.getLatestResult();
         double rotSpeed;
 
+        Logger.getInstance().recordOutput("Vision/Result", result.getBestTarget().getYaw());
+        Logger.getInstance().recordOutput("Vision/TargetID", result.getBestTarget().getFiducialId());
+
         if (result.hasTargets() && (result.getBestTarget().getFiducialId() == targetID || targetID == 99)) {
             double yaw = Math.toRadians(result.getBestTarget().getYaw());
             rotSpeed = frontCameraPID.calculate(yaw, 0);
@@ -438,8 +441,6 @@ public class DriveWithIO extends SubsystemBase{
         }
         return rotSpeed;
     }
-
-
 
     
       /**
