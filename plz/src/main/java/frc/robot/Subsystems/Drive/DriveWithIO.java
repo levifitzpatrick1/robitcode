@@ -3,7 +3,7 @@ package frc.robot.Subsystems.Drive;
 import java.util.Arrays;
 
 import org.littletonrobotics.junction.Logger;
-import org.photonvision.PhotonVersion;
+//import org.photonvision.PhotonVersion;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -17,6 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Constants;
 import frc.robot.Constants.ModuleConstants;
@@ -240,6 +241,12 @@ public class DriveWithIO extends SubsystemBase{
             Logger.getInstance().recordOutput(
                 "SwerveModuleStatesSetpoints/Turn/" + Integer.toString(i),
                 optimizedModuleStates[i].angle.getRadians());
+
+            Logger.getInstance().recordOutput(
+                "NeedToKnow/Drive/ModuleRot" + Integer.toString(i),
+                moduleInputs[i].turnAbsolutePositionRad);
+
+                SmartDashboard.putNumber("encoder" + i, moduleInputs[i].turnAbsolutePositionRad);
           
                 }
 

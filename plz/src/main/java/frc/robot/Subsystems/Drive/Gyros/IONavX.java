@@ -24,7 +24,7 @@ public class IONavX implements IOGyro {
 
     public void updateInputs(IOGyroInputs inputs) {
 
-        inputs.connected = navx.isConnected();
+        //inputs.connected = navx.isConnected();
         inputs.positionRad = Math.toRadians(navx.getAngle());
         inputs.velocityRadPerSec = Math.toRadians(navx.getRate());
 
