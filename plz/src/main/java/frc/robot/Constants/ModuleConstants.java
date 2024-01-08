@@ -80,8 +80,9 @@ public static class ModuleSpecificConstants {
 
             /* **********School BOT************* */
             // Module 5
-            // Back Left
+            // Front Left
             case 5:
+            // Goodish value: .122
                 kAbsoluteEncoderOffset = 0.122;
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 5;
@@ -91,9 +92,10 @@ public static class ModuleSpecificConstants {
                 break;
 
             // Module 6
-            // Front Left
+            // Rear Left
             case 6:
-                kAbsoluteEncoderOffset = -0.055;                
+                //-0.55
+                kAbsoluteEncoderOffset = -0.040;                
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 6;
 
@@ -102,10 +104,11 @@ public static class ModuleSpecificConstants {
                 break;
 
             // Module 7
-            // Back Right
+            // Rear Right
             case 7:
+            //.039
                 // kAbsoluteEncoderOffset = -.049;
-                kAbsoluteEncoderOffset = 0.059;
+                kAbsoluteEncoderOffset = 0.050;
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 7;
 
@@ -116,7 +119,7 @@ public static class ModuleSpecificConstants {
             // Module 8
             // Front Right
             case 8:
-                kAbsoluteEncoderOffset = 0.565;
+                kAbsoluteEncoderOffset = 0.573;
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 8;
 
