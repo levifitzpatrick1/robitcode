@@ -26,7 +26,7 @@ public class RobotContainer {
       drivetrain, 
       () -> driverController.getRawAxis(OIConstants.kXboxLeftXAxis),
       () -> driverController.getRawAxis(OIConstants.kXboxLeftYAxis),
-      () -> driverController.getRawAxis(OIConstants.kXboxRightXAxis),
+      () -> -driverController.getRawAxis(OIConstants.kXboxRightXAxis),
       () -> driverController.getRawButton(OIConstants.kXboxAButton)
       ));
 

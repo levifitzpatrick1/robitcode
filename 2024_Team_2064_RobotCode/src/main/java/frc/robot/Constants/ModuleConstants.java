@@ -83,7 +83,7 @@ public static class ModuleSpecificConstants {
             // Front Left
             case 5:
             // Goodish value: .122
-                kAbsoluteEncoderOffset = 0.122;
+                kAbsoluteEncoderOffset = 0.124;
                 kAbsoluteEncoderReversed = false;
                 kAbsoluteEncoderID = 5;
 
